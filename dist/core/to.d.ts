@@ -1,0 +1,11 @@
+export declare function to_string(value: unknown): string;
+export declare function to_number(value: unknown): number;
+export declare function to_integer(value: unknown, round?: boolean): number;
+export declare function to_float(value: unknown, decimal?: 1 | 2, round?: boolean): string;
+export declare function to_local_cent(value: unknown, round?: boolean): number;
+export declare function to_boolean(value: unknown): boolean;
+export declare function to_array(value: unknown): any[];
+export declare function to_symbol(value: unknown): Symbol;
+export declare function to_undefined(): undefined;
+export declare function to_null(): null;
+export declare function to_local_pinyin(value: unknown): string[];
