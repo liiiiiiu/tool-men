@@ -1,6 +1,6 @@
 {
   "name": "tool-men",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "工具“人” ~",
   "scripts": {
     "dev": "vite",
@@ -19,8 +19,8 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/tool-men.umd.js",
-  "module": "./dist/tool-men.es.js",
+  "main": "./dist/tool-men.es.js",
+  "module": "./dist/tool-men.umd.js",
   "types": "./dist/tool-men.d.ts",
   "exports": {
     ".": {
