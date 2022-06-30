@@ -12,6 +12,6 @@
     "declaration": true,
     "declarationDir": "dist"
   },
-  "files": ["lib/tool-man.ts"],
+  "files": ["lib/tool-men.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

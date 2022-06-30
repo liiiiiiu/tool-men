@@ -17,10 +17,10 @@ export default defineConfig({
   // https://cn.vitejs.dev/guide/build.html#library-mode
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'lib/tool-man.ts'),
-      name: 'ToolMan',
+      entry: path.resolve(__dirname, 'lib/tool-men.ts'),
+      name: 'ToolMen',
       // the proper extensions will be added
-      fileName: 'tool-man'
+      fileName: 'tool-men'
     },
     rollupOptions: {
       // 确保外部化处理那些你不想打包进库的依赖

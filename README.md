@@ -1,21 +1,21 @@
-# Tool Man
+# Tool Men
 
 Some commonly used tool functions in my web development.
 
 ## Installing
 
 ```bash
-npm install tool-man --save
+npm install tool-men --save
 ```
 
 ## Example
 
 ```javascript
 // you can import it when you need
-import { is_string, to_number } from 'tool-man'
+import { is_string, to_number } from 'tool-men'
 
 // or use any name to import all functions
-import * as utils from 'tool-man'
+import * as utils from 'tool-men'
 ```
 
 ### is

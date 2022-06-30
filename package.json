@@ -1,5 +1,5 @@
 {
-  "name": "tool-man",
+  "name": "tool-men",
   "version": "1.0.0",
   "description": "工具“人” ~",
   "scripts": {
@@ -22,24 +22,25 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/tool-man.umd.js",
-  "module": "./dist/tool-man.es.js",
-  "types": "./dist/tool-man.d.ts",
+  "main": "./dist/tool-men.umd.js",
+  "module": "./dist/tool-men.es.js",
+  "types": "./dist/tool-men.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/tool-man.es.js",
-      "require": "./dist/tool-man.umd.js"
+      "import": "./dist/tool-men.es.js",
+      "require": "./dist/tool-men.umd.js"
     }
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/liiiiiiu/tool-man.git"
+    "url": "https://github.com/liiiiiiu/tool-men.git"
   },
   "keywords": [
     "javascript",
-    "utils",
     "util",
+    "utils",
     "tool",
+    "tools",
     "weapp",
     "微信小程序"
   ],
