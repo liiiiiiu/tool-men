@@ -1,8 +1,9 @@
 import * as checker from './core/is'
 import * as transformer from './core/to'
-import * as generator from './core/generate'
+import * as generator from './core/gen'
 import * as datetTransformer from './core/date'
 import * as weapp from './core/wx'
+import * as enhancer from './core/wow'
 
 export const {
   is_string,
@@ -65,3 +66,7 @@ export const {
   wx_image_info_sync,
   wx_file_info_sync
 } = weapp
+
+export const {
+  wow_array
+} = enhancer

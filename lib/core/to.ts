@@ -1,32 +1,25 @@
 import Big from 'big.js'
-import Check from '../helper/check'
-import origin from '../helper/origin'
-import makePy from '../helper/chinese2py'
+import Cast from '../helper/cast'
+import makePy from '../helper/local/chinese2py'
 
-const check = new Check()
+const cast = new Cast()
 
 export function to_string(value: unknown): string {
-  if (check.symbol(value)) {
-    value = (<symbol>value).description || ''
-  }
-
-  return (value + '').toString() + ''
+  return cast.str(value)
 }
 
 export function to_number(value: unknown): number {
-  let newValue = +origin(value)
-
-  return !check.nan(newValue) ? newValue : 0
+  return cast.num(value)
 }
 
 export function to_integer(value: unknown, round: boolean = false): number {
-  let newValue = to_number(value)
+  let newValue = cast.num(value)
 
   return !round ? parseInt(newValue + '') : Math.round(newValue)
 }
 
 export function to_float(value: unknown, decimal: 1 | 2 = 2, round: boolean = false): string {
-  let newValue = to_number(value)
+  let newValue = cast.num(value)
 
   if (round) {
     return (+newValue).toFixed(decimal)
@@ -55,42 +48,28 @@ export function to_local_cent(value: unknown, round: boolean = false): number {
 }
 
 export function to_boolean(value: unknown): boolean {
-  return !!value
+  return cast.bool(value)
 }
 
 export function to_array(value: unknown): any[] {
-  if (check.arr(value)) {
-    return (value as any[])
-  }
-
-  if (check.str(value) && (<string>value).indexOf(',') > -1) {
-    return (<string>value).split(',')
-  }
-
-  return [value]
+  return cast.arr(value)
 }
 
 export function to_symbol(value: unknown): Symbol {
-  let newValue = ''
-
-  if (!check.str(value) || !check.num(value)) {
-    newValue = to_string(value)
-  }
-
-  return Symbol(newValue || (value + ''))
+  return cast.symbol(value)
 }
 
 export function to_undefined(): undefined {
-  return undefined
+  return cast.undef()
 }
 
 export function to_null(): null {
-  return null
+  return cast.nul()
 }
 
 // only for local
 export function to_local_pinyin(value: unknown): string[] {
-  let newValue = to_string(value)
+  let newValue = cast.str(value)
 
   return makePy(newValue) || []
 }

@@ -2,19 +2,19 @@ import Check from '../helper/check'
 
 const check = new Check()
 
-let rint = /^-?\d+$/
+const rint = /^-?\d+$/
 
-let rposInt = /^\d+$/
+const rposInt = /^\d+$/
 
-let rdecimal = /^\d{1,10}([.]\d{2}){1}$/
+const rdecimal = /^\d{1,10}([.]\d{2}){1}$/
 
-let rposDecimal = /^\d+(\.\d{0,2})?$/
+const rposDecimal = /^\d+(\.\d{0,2})?$/
 
-let rmobilephone = /^1[3456789][0-9]{9}$/
+const rmobilephone = /^1[3456789][0-9]{9}$/
 
-let remial = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+const remial = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
 
-let rurl = /^(?=^.{3,255}$)(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*([\?&]\w+=\w*)*$/
+const rurl = /^(?=^.{3,255}$)(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*([\?&]\w+=\w*)*$/
 
 export function is_string(value: unknown): boolean {
   return check.str(value)

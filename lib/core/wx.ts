@@ -1,15 +1,29 @@
+import Check from '../helper/check'
+
 // only for weapp
 
-export function wx_clone_deep(value: any): any {
-  return JSON.parse(JSON.stringify(value))
+const check = new Check()
+
+let wx = (<any>window)['wx'] ?? null
+
+function exception(handle: any) {
+  if (check.wx() && wx) {
+    return handle && check.fun(handle) && handle()
+  } else {
+    throw Error('This tool only for weapp!')
+  }
 }
 
-export function wx_dataset(value: any): any {
-  return value?.currentTarget?.dataset ?? null
+export function wx_clone_deep(value: any): any {
+  return exception(() => JSON.parse(JSON.stringify(value)))
+}
+
+export function wx_dataset(e: any): any {
+  return exception(() => e?.currentTarget?.dataset ?? null)
 }
 
 export function wx_promisify(fn: Function) {
-  return function (obj: any) {
+  return exception(() => function (obj: any) {
     let args: any[] = [],
       len = arguments.length - 1
 
@@ -29,34 +43,25 @@ export function wx_promisify(fn: Function) {
 
       fn.apply(null, [obj].concat(args))
     })
-  }
+  })
 }
 
 export function wx_window_width(): number {
-  // @ts-ignore
-  return parseInt(wx?.getSystemInfoSync()?.windowWidth || 0)
+  return exception(() => parseInt(wx.getSystemInfoSync().windowWidth || 0))
 }
 
 export function wx_window_height(): number {
-  // @ts-ignore
-  return parseInt(wx?.getSystemInfoSync()?.windowHeight || 0)
+  return exception(() => parseInt(wx.getSystemInfoSync().windowHeight || 0))
 }
 
 export function wx_window_pixel_ratio(): number {
-  // @ts-ignore
-  return parseInt(wx?.getSystemInfoSync()?.pixelRatio || 0)
+  return exception(() => parseInt(wx.getSystemInfoSync().pixelRatio || 0))
 }
 
 export function wx_image_info_sync(path: string) {
-  if (!path) return
-
-  // @ts-ignore
-  return wx_promisify(wx?.getImageInfo)({ src: path })
+  return exception(() => wx_promisify(wx.getImageInfo)({ src: path }))
 }
 
 export function wx_file_info_sync(path: string) {
-  if (!path) return
-
-  // @ts-ignore
-  return wx_promisify(wx?.getFileInfo)({ filePath: path })
+  return exception(() => wx_promisify(wx.getFileInfo)({ filePath: path }))
 }

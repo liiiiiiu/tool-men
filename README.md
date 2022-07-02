@@ -18,6 +18,28 @@ import { is_string, to_number } from 'tool-men'
 import * as utils from 'tool-men'
 ```
 
+### wow
+
+#### wow_array
+
+```javascript
+let arr = wow_array([1, 2, 3])
+
+arr[0] // 1
+arr[-1] // 3
+arr.first // 1
+arr.last // 3
+arr['1:'] // [2, 3]
+arr['1:2'] // [2]
+arr[':'] // [1, 2, 3]
+arr['1:3:2'] // [2]
+arr['::'] // [1, 2, 3]
+arr['::-1'] // [3, 2, 1]
+arr.min // 1
+arr.max // 3
+arr.remove(0, val => val === 3) // [2]
+```
+
 ### is
 
 |     is_   |     usage    | result |
@@ -57,7 +79,7 @@ import * as utils from 'tool-men'
 | to_float | to_float(1.256, 1, false) / to_float(1.256, 2, true) |  '1.2' / '1.26' |
 | to_local_cent | to_local_cent(190.50) |  19050 |
 | to_boolean | to_boolean(0) | false |
-| to_array | to_array(0), to_array('1, 2, 3') | [0] / [1, 2, 3] |
+| to_array | to_array(0) / to_array('1, 2, 3') | [0] / [1, 2, 3] |
 | to_symbol | to_symbol(0) | Symbol(0) |
 | to_undefined | to_undefined() | undefined |
 | to_null | to_null |  null |
@@ -84,7 +106,7 @@ import * as utils from 'tool-men'
 |     wx_   |     usage    | result |
 |    ---    |      ---     |  ----  |
 | wx_clone_deep | wx_clone_deep([1, 2, 3]) |  [1, 2, 3] |
-| wx_dataset | wx_dataset(e) |  {} |
+| wx_dataset | wx_dataset(e) |  e.currentTarget.dataset => {} |
 | wx_promisify | wx_promisify(wx.getImageInfo) |   |
 | wx_window_width | wx_window_width() | 375  |
 | wx_window_height | wx_window_height() |  555 |

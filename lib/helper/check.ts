@@ -83,4 +83,9 @@ export default class Check {
 
     return tag == '[object Error]' || tag == '[object DOMException]' || (typeof (value as any).message === 'string' && typeof (value as any).name === 'string' && !this.plainObj(value))
   }
+
+  // check is using weapp
+  public wx():boolean {
+    return typeof window === 'object' && !this.nul(window) && window.Object === Object && Object.prototype.hasOwnProperty.call(window, 'wx')
+  }
 }
