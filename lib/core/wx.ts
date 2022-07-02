@@ -4,11 +4,11 @@ import Check from '../helper/check'
 
 const check = new Check()
 
-let wx = (<any>window)['wx'] ?? null
-
 function exception(handle: any) {
+  let wx = (<any>window)['wx'] ?? null
+
   if (check.wx() && wx) {
-    return handle && check.fun(handle) && handle()
+    return handle && check.fun(handle) && handle(wx)
   } else {
     throw Error('This tool only for weapp!')
   }
@@ -47,21 +47,21 @@ export function wx_promisify(fn: Function) {
 }
 
 export function wx_window_width(): number {
-  return exception(() => parseInt(wx.getSystemInfoSync().windowWidth || 0))
+  return exception((wx: any) => parseInt(wx.getSystemInfoSync().windowWidth || 0))
 }
 
 export function wx_window_height(): number {
-  return exception(() => parseInt(wx.getSystemInfoSync().windowHeight || 0))
+  return exception((wx: any) => parseInt(wx.getSystemInfoSync().windowHeight || 0))
 }
 
 export function wx_window_pixel_ratio(): number {
-  return exception(() => parseInt(wx.getSystemInfoSync().pixelRatio || 0))
+  return exception((wx: any) => parseInt(wx.getSystemInfoSync().pixelRatio || 0))
 }
 
 export function wx_image_info_sync(path: string) {
-  return exception(() => wx_promisify(wx.getImageInfo)({ src: path }))
+  return exception((wx: any) => wx_promisify(wx.getImageInfo)({ src: path }))
 }
 
 export function wx_file_info_sync(path: string) {
-  return exception(() => wx_promisify(wx.getFileInfo)({ filePath: path }))
+  return exception((wx: any) => wx_promisify(wx.getFileInfo)({ filePath: path }))
 }

@@ -1,4 +1,3 @@
-var _a;
 class Check {
   constructor() {
     this.objProto = Object.prototype;
@@ -1274,10 +1273,11 @@ var datetTransformer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defi
   d_format_YMD: d_format_YMD$1
 }, Symbol.toStringTag, { value: "Module" }));
 const check$2 = new Check();
-let wx = (_a = window["wx"]) != null ? _a : null;
 function exception(handle) {
+  var _a;
+  let wx = (_a = window["wx"]) != null ? _a : null;
   if (check$2.wx() && wx) {
-    return handle && check$2.fun(handle) && handle();
+    return handle && check$2.fun(handle) && handle(wx);
   } else {
     throw Error("This tool only for weapp!");
   }
@@ -1287,8 +1287,8 @@ function wx_clone_deep$1(value) {
 }
 function wx_dataset$1(e) {
   return exception(() => {
-    var _a2, _b;
-    return (_b = (_a2 = e == null ? void 0 : e.currentTarget) == null ? void 0 : _a2.dataset) != null ? _b : null;
+    var _a, _b;
+    return (_b = (_a = e == null ? void 0 : e.currentTarget) == null ? void 0 : _a.dataset) != null ? _b : null;
   });
 }
 function wx_promisify$1(fn) {
@@ -1311,19 +1311,19 @@ function wx_promisify$1(fn) {
   });
 }
 function wx_window_width$1() {
-  return exception(() => parseInt(wx.getSystemInfoSync().windowWidth || 0));
+  return exception((wx) => parseInt(wx.getSystemInfoSync().windowWidth || 0));
 }
 function wx_window_height$1() {
-  return exception(() => parseInt(wx.getSystemInfoSync().windowHeight || 0));
+  return exception((wx) => parseInt(wx.getSystemInfoSync().windowHeight || 0));
 }
 function wx_window_pixel_ratio$1() {
-  return exception(() => parseInt(wx.getSystemInfoSync().pixelRatio || 0));
+  return exception((wx) => parseInt(wx.getSystemInfoSync().pixelRatio || 0));
 }
 function wx_image_info_sync$1(path) {
-  return exception(() => wx_promisify$1(wx.getImageInfo)({ src: path }));
+  return exception((wx) => wx_promisify$1(wx.getImageInfo)({ src: path }));
 }
 function wx_file_info_sync$1(path) {
-  return exception(() => wx_promisify$1(wx.getFileInfo)({ filePath: path }));
+  return exception((wx) => wx_promisify$1(wx.getFileInfo)({ filePath: path }));
 }
 var weapp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
