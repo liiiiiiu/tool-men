@@ -1,3 +1,12 @@
+/**
+ * Generate UUID.
+ *
+ * @returns {string} UUID.
+ *
+ * @example
+ *
+ * gen_uuid() // 3e3e6bbb-ecb7-4289-8a05-a64647d82604
+ */
 export function gen_uuid(): string {
   const s = []
   const hexDigits = '0123456789abcdef'
@@ -15,4 +24,27 @@ export function gen_uuid(): string {
   const uuid = s.join('')
 
   return uuid
+}
+
+/**
+ * Generate random integer between two numbers.
+ *
+ * @param {number|undefined} start Minimum value between two numbers.
+ * @param {number|undefined} end Maximum value between two numbers, not contain this value.
+ *
+ * @returns {number} Random integer between two numbers.
+ *
+ * @exapmle
+ *
+ * gen_random_integer(10, 100) // 12
+ */
+export function gen_random_integer(start?: number, end?: number): number {
+  start = start ? (+start || 0) : 0
+  end = end ? (+end || 0) : 10
+
+  if (end < start) {
+    [start, end] = [end, start]
+  }
+
+  return Math.floor(Math.random() * (end - start)) + Math.min(start, end)
 }

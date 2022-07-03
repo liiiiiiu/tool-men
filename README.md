@@ -65,7 +65,7 @@ arr.remove(0, val => val === 3) // [2]
 | is_arguments | is_arguments(0) |  false |
 | is_error | is_error(0) |  false |
 | is_leap_year | is_leap_year(2022) |  false |
-| is_local_mobilephone | is_local_mobilephone(18888888888) |  true |
+| is_cn_phone_number | is_cn_phone_number(18888888888) |  true |
 | is_email | is_email('123@qq.com') |  true |
 | is_url | is_url('https://www.abc.com') |  true |
 
@@ -77,13 +77,13 @@ arr.remove(0, val => val === 3) // [2]
 | to_number | to_number('1') |  1  |
 | to_integer | to_integer(1.6, false) / to_integer(1.6, true) |  1 / 2 |
 | to_float | to_float(1.256, 1, false) / to_float(1.256, 2, true) |  '1.2' / '1.26' |
-| to_local_cent | to_local_cent(190.50) |  19050 |
+| to_cn_cent | to_cn_cent(190.50) |  19050 |
 | to_boolean | to_boolean(0) | false |
 | to_array | to_array(0) / to_array('1, 2, 3') | [0] / [1, 2, 3] |
 | to_symbol | to_symbol(0) | Symbol(0) |
 | to_undefined | to_undefined() | undefined |
 | to_null | to_null |  null |
-| to_local_pinyin | to_local_pinyin('你好') | ['NH'] |
+| to_cn_pinyin | to_cn_pinyin('你好') | ['NH'] |
 
 ### date
 

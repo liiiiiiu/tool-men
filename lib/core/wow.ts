@@ -115,24 +115,28 @@ function batchRemove(target: any[]) {
 }
 
 /**
- * wow array
+ * Wow array, better array!
  *
  * see examples.
  *
+ * @param {Array} value Initial array.
+ *
+ * @returns {WowArrayType} Wow array.
+ *
  * @example
  *
- * 1. [1, 2, 3][-1] => 3
- * 2. [1, 2, 3].first => 1
- * 3. [1, 2, 3].last => 3
- * 4. [1, 2, 3]['1:'] => [2, 3]
- *    [1, 2, 3]['1:2'] => [2]
- *    [1, 2, 3][':'] => [1, 2, 3]
- *    [1, 2, 3]['1:3:2'] => [2]
- *    [1, 2, 3]['::'] => [1, 2, 3]
- *    [1, 2, 3]['::-1'] => [3, 2, 1]
- * 5. [1, 2, 3].min => 1
- * 6. [1, 2, 3].max => 3
- * 7. [1, 2, 3].remove(0, val => val === 3) => [2]
+ * [1, 2, 3][-1] // 3
+ * [1, 2, 3].first // 1
+ * [1, 2, 3].last // 3
+ * [1, 2, 3]['1:'] // [2, 3]
+ * [1, 2, 3]['1:2'] // [2]
+ * [1, 2, 3][':'] // [1, 2, 3]
+ * [1, 2, 3]['1:3:2'] // [2]
+ * [1, 2, 3]['::'] // [1, 2, 3]
+ * [1, 2, 3]['::-1'] // [3, 2, 1]
+ * [1, 2, 3].min // 1
+ * [1, 2, 3].max // 3
+ * [1, 2, 3].remove(0, val => val === 3) // [2]
  */
 export function wow_array(value: object): WowArrayType {
   if (check.undef(value) || !check.arr(value)) {

@@ -4,6 +4,7 @@ import * as generator from './core/gen'
 import * as datetTransformer from './core/date'
 import * as weapp from './core/wx'
 import * as enhancer from './core/wow'
+import * as mocker from './core/mock'
 
 export const {
   is_string,
@@ -27,7 +28,7 @@ export const {
   is_arguments,
   is_error,
   is_leap_year,
-  is_local_mobilephone,
+  is_cn_phone_number,
   is_email,
   is_url
 } = checker
@@ -37,17 +38,18 @@ export const {
   to_number,
   to_integer,
   to_float,
-  to_local_cent,
+  to_cn_cent,
   to_boolean,
   to_array,
   to_symbol,
   to_undefined,
   to_null,
-  to_local_pinyin
+  to_cn_pinyin
 } = transformer
 
 export const {
-  gen_uuid
+  gen_uuid,
+  gen_random_integer,
 } = generator
 
 export const {
@@ -70,3 +72,13 @@ export const {
 export const {
   wow_array
 } = enhancer
+
+export const {
+  mock_avatar
+} = mocker
+
+console.log('mock_avatar', mock_avatar());
+
+console.log('gen_uuid', gen_uuid());
+console.log('gen_random', gen_random_integer(10, 100));
+console.log('to_integer', to_cn_cent(1.567), to_cn_cent(1.567, true));
