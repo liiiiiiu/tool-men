@@ -1283,7 +1283,7 @@ var datetTransformer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defi
 }, Symbol.toStringTag, { value: "Module" }));
 const check$2 = new Check();
 function exception(handle2) {
-  if (!check$2.wx()) {
+  if (check$2.wx()) {
     return handle2 && check$2.fun(handle2) && handle2(window["wx"]);
   } else {
     throw Error("This tool only for weapp!");

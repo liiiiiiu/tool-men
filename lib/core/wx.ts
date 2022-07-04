@@ -5,7 +5,7 @@ import Check from '../helper/check'
 const check = new Check()
 
 function exception(handle: any) {
-  if (!check.wx()) {
+  if (check.wx()) {
     return handle && check.fun(handle) && handle((<any>window)['wx'])
   } else {
     throw Error('This tool only for weapp!')
