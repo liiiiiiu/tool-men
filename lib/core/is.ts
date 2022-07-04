@@ -12,7 +12,7 @@ const rposDecimal = /^\d+(\.\d{0,2})?$/
 
 const rmobilephone = /^1[3456789][0-9]{9}$/
 
-const remial = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+const remail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
 
 const rurl = /^(?=^.{3,255}$)(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*([\?&]\w+=\w*)*$/
 
@@ -276,7 +276,7 @@ export function is_email(value: unknown): boolean {
     return false
   }
 
-  return remial.test(value + '')
+  return remail.test(value + '')
 }
 
 /**

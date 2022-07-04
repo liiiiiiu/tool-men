@@ -74,11 +74,21 @@ export const {
 } = enhancer
 
 export const {
-  mock_avatar
+  mock_,
+  mock_id,
+  mock_unique_id,
+  mock_image,
+  mock_title,
+  mock_avatar,
+  mock_nick_name,
+  mock_email,
+  mock_province,
+  mock_city,
+  mock_district,
+  mock_address,
+  mock_url,
+  mock_ip,
+  mock_created_at,
 } = mocker
 
-console.log('mock_avatar', mock_avatar());
-
-console.log('gen_uuid', gen_uuid());
-console.log('gen_random', gen_random_integer(10, 100));
-console.log('to_integer', to_cn_cent(1.567), to_cn_cent(1.567, true));
+console.log('111', wx_window_width());

@@ -117,9 +117,9 @@ function batchRemove(target: any[]) {
 /**
  * Wow array, better array!
  *
- * see examples.
+ * See example.
  *
- * @param {Array} value Initial array.
+ * @param {Object} value Initial array.
  *
  * @returns {WowArrayType} Wow array.
  *
@@ -182,4 +182,8 @@ export function wow_array(value: object): WowArrayType {
   }
 
   return new Proxy(value, hander) as WowArrayType
+}
+
+export function wow_storage() {
+  
 }

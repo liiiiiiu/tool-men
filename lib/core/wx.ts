@@ -5,10 +5,8 @@ import Check from '../helper/check'
 const check = new Check()
 
 function exception(handle: any) {
-  let wx = (<any>window)['wx'] ?? null
-
-  if (check.wx() && wx) {
-    return handle && check.fun(handle) && handle(wx)
+  if (!check.wx()) {
+    return handle && check.fun(handle) && handle((<any>window)['wx'])
   } else {
     throw Error('This tool only for weapp!')
   }

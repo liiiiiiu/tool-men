@@ -1,7 +1,7 @@
 {
   "name": "tool-men",
   "version": "1.0.7",
-  "description": "工具“人” ~",
+  "description": "Tool Men! 工具“人” ~",
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc -p tsconfig.json",

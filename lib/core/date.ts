@@ -20,8 +20,8 @@ export function d_time(): number {
  *
  * @example
  *
- * d_format() // 2022-07-03 11:33:44
- * d_format(1656819176086) // 2022-07-03 11:32:56
+ * d_format() // '2022-07-03 11:33:44'
+ * d_format(1656819176086) // '2022-07-03 11:32:56'
  */
 export function d_format(value?: string | number): string {
   if (!value) {
@@ -49,8 +49,8 @@ export function d_format(value?: string | number): string {
  *
  * @example
  *
- * d_format_YMD() // 2022-07-03
- * d_format_YMD(1656819176086) // 2022-07-03
+ * d_format_YMD() // '2022-07-03'
+ * d_format_YMD(1656819176086) // '2022-07-03'
  */
 export function d_format_YMD(value?: string | number): string {
   return d_format(value).substring(0, 10)

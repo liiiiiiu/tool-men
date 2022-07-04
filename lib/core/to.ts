@@ -5,7 +5,7 @@ import makePy from '../helper/local/chinese2py'
 const cast = new Cast()
 
 /**
- * Converts value to string.
+ * Convert value to string.
  *
  * @param {Object} value The value to convert.
  *

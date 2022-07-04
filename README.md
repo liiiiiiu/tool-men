@@ -1,6 +1,6 @@
 # Tool Men
 
-工具“人” ~
+Tool Men! 工具“人” ~
 
 ## Installing
 
@@ -12,7 +12,7 @@ npm install tool-men --save
 
 ```javascript
 // you can import it when you need
-import { is_string, to_number } from 'tool-men'
+import { is_string, to_number, wow_array } from 'tool-men'
 
 // or use any name to import all functions
 import * as utils from 'tool-men'
@@ -21,6 +21,8 @@ import * as utils from 'tool-men'
 ### wow
 
 #### wow_array
+
+**Wow array, better array!**
 
 ```javascript
 let arr = wow_array([1, 2, 3])
@@ -41,6 +43,8 @@ arr.remove(0, val => val === 3) // [2]
 ```
 
 ### is
+
+Check the type of value.
 
 |     is_   |     usage    | result |
 |    ---    |      ---     |  ----  |
@@ -71,6 +75,8 @@ arr.remove(0, val => val === 3) // [2]
 
 ### to
 
+Convert value to the needed.
+
 |     to_   |     usage    | result |
 |    ---    |      ---     |  ----  |
 | to_string | to_string(0) |  '0' |
@@ -87,6 +93,8 @@ arr.remove(0, val => val === 3) // [2]
 
 ### date
 
+Used for date formatting.
+
 |     d_   |     usage    | result |
 |    ---    |      ---     |  ----  |
 | d_time | d_time() |  1656571581142 |
@@ -95,13 +103,42 @@ arr.remove(0, val => val === 3) // [2]
 
 ### gen
 
+Generate some useful data.
+
 |     gen_   |     usage    | result |
 |    ---    |      ---     |  ----  |
 | gen_uuid | gen_uuid() |  '3e479fc2-ab2e-42bc-85f3-c592be4e0cb4' |
+| gen_random_integer | gen_random_integer() / gen_random_integer(20, 30) |  3 / 25 |
+
+### mock
+
+Get the mock data needed in development quickly.
+
+**Depend on MockJS.**
+
+[MockJS](http://mockjs.com/)
+
+|     mock_   |     usage    | result |
+|    ---    |      ---     |  ----  |
+| mock_ | mock_('@string("lower", 1, 3)' |  'wtc' |
+| mock_id | mock_id()  |  23 |
+| mock_unique_id | mock_unique_id() |  '320000200608168153' |
+| mock_image | mock_image() |  'http://dummyimage.com/100x100' |
+| mock_title | mock_title() |  '养去全对快' |
+| mock_avatar | mock_avatar() |  'http://dummyimage.com/100x100' |
+| mock_nick_name | mock_nick_name() |  '薛强' |
+| mock_email | mock_email() |  'y.adwjjhbmn@qq.com' |
+| mock_province | mock_province() |  '安徽省' |
+| mock_city | mock_city() |  '萍乡市' |
+| mock_district | mock_district() |  '都昌县' |
+| mock_address | mock_address() |  '山东省 烟台市 蓬莱市' |
+| mock_url | mock_url() |  'http://ovmqzolocc.la/ecvrv' |
+| mock_ip | mock_ip() |  '202.40.46.57' |
+| mock_created_at | mock_created_at() | '1998-12-22 17:15:31' |
 
 ### wx
 
-**only for weapp.**
+**Only for weapp.**
 
 |     wx_   |     usage    | result |
 |    ---    |      ---     |  ----  |
