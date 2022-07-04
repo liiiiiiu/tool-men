@@ -1,13 +1,11 @@
 import Check from '../helper/check'
 
-// Only for weapp
-
 const check = new Check()
 
 function exception(handle: any) {
-  if (check.wx()) {
-    return handle && check.fun(handle) && handle((<any>window)['wx'])
-  } else {
+  try {
+    return handle && check.fun(handle) && handle()
+  } catch (error) {
     throw Error('This tool only for weapp!')
   }
 }
@@ -79,7 +77,8 @@ export function wx_promisify(fn: Function): Function {
  * @returns {number} Window width.
  */
 export function wx_window_width(): number {
-  return exception((wx: any) => parseInt(wx.getSystemInfoSync().windowWidth || 0))
+  // @ts-ignore
+  return exception(() => parseInt(wx.getSystemInfoSync().windowWidth || 0))
 }
 
 /**
@@ -90,7 +89,8 @@ export function wx_window_width(): number {
  * @returns {number} Window height.
  */
 export function wx_window_height(): number {
-  return exception((wx: any) => parseInt(wx.getSystemInfoSync().windowHeight || 0))
+  // @ts-ignore
+  return exception(() => parseInt(wx.getSystemInfoSync().windowHeight || 0))
 }
 
 /**
@@ -101,7 +101,8 @@ export function wx_window_height(): number {
  * @returns {number} Window pixel ratio.
  */
 export function wx_window_pixel_ratio(): number {
-  return exception((wx: any) => parseInt(wx.getSystemInfoSync().pixelRatio || 0))
+  // @ts-ignore
+  return exception(() => parseInt(wx.getSystemInfoSync().pixelRatio || 0))
 }
 
 /**
@@ -112,7 +113,8 @@ export function wx_window_pixel_ratio(): number {
  * @returns {Object} Image info.
  */
 export function wx_image_info_sync(path: string) {
-  return exception((wx: any) => wx_promisify(wx.getImageInfo)({ src: path }))
+  // @ts-ignore
+  return exception(() => wx_promisify(wx.getImageInfo)({ src: path }))
 }
 
 /**
@@ -123,5 +125,6 @@ export function wx_image_info_sync(path: string) {
  * @returns {Object} File info.
  */
 export function wx_file_info_sync(path: string) {
-  return exception((wx: any) => wx_promisify(wx.getFileInfo)({ filePath: path }))
+  // @ts-ignore
+  return exception(() => wx_promisify(wx.getFileInfo)({ filePath: path }))
 }

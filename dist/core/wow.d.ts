@@ -31,5 +31,4 @@ interface WowArrayType {
  * [1, 2, 3].remove(0, val => val === 3) // [2]
  */
 export declare function wow_array(value: object): WowArrayType;
-export declare function wow_storage(): void;
 export {};

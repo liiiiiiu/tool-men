@@ -1,6 +1,6 @@
 {
   "name": "tool-men",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Tool Men! 工具“人” ~",
   "scripts": {
     "dev": "vite",
@@ -41,7 +41,9 @@
     "tool",
     "tools",
     "weapp",
-    "微信小程序"
+    "微信小程序",
+    "mock",
+    "array"
   ],
   "author": "liujiachang",
   "license": "MIT"

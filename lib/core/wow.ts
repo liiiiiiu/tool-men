@@ -183,7 +183,3 @@ export function wow_array(value: object): WowArrayType {
 
   return new Proxy(value, hander) as WowArrayType
 }
-
-export function wow_storage() {
-  
-}

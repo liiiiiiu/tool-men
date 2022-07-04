@@ -90,5 +90,3 @@ export const {
   mock_ip,
   mock_created_at,
 } = mocker
-
-console.log('111', wx_window_width());

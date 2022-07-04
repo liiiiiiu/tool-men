@@ -1283,9 +1283,9 @@ var datetTransformer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defi
 }, Symbol.toStringTag, { value: "Module" }));
 const check$2 = new Check();
 function exception(handle2) {
-  if (check$2.wx()) {
-    return handle2 && check$2.fun(handle2) && handle2(window["wx"]);
-  } else {
+  try {
+    return handle2 && check$2.fun(handle2) && handle2();
+  } catch (error) {
     throw Error("This tool only for weapp!");
   }
 }
@@ -1318,19 +1318,19 @@ function wx_promisify$1(fn) {
   });
 }
 function wx_window_width$1() {
-  return exception((wx) => parseInt(wx.getSystemInfoSync().windowWidth || 0));
+  return exception(() => parseInt(wx.getSystemInfoSync().windowWidth || 0));
 }
 function wx_window_height$1() {
-  return exception((wx) => parseInt(wx.getSystemInfoSync().windowHeight || 0));
+  return exception(() => parseInt(wx.getSystemInfoSync().windowHeight || 0));
 }
 function wx_window_pixel_ratio$1() {
-  return exception((wx) => parseInt(wx.getSystemInfoSync().pixelRatio || 0));
+  return exception(() => parseInt(wx.getSystemInfoSync().pixelRatio || 0));
 }
 function wx_image_info_sync$1(path) {
-  return exception((wx) => wx_promisify$1(wx.getImageInfo)({ src: path }));
+  return exception(() => wx_promisify$1(wx.getImageInfo)({ src: path }));
 }
 function wx_file_info_sync$1(path) {
-  return exception((wx) => wx_promisify$1(wx.getFileInfo)({ filePath: path }));
+  return exception(() => wx_promisify$1(wx.getFileInfo)({ filePath: path }));
 }
 var weapp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
@@ -1482,12 +1482,9 @@ function wow_array$1(value) {
   };
   return new Proxy(value, hander);
 }
-function wow_storage() {
-}
 var enhancer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  wow_array: wow_array$1,
-  wow_storage
+  wow_array: wow_array$1
 }, Symbol.toStringTag, { value: "Module" }));
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 var mock = { exports: {} };
@@ -8664,5 +8661,4 @@ const {
   mock_ip,
   mock_created_at
 } = mocker;
-console.log("111", wx_window_width());
 export { d_format, d_format_YMD, d_time, gen_random_integer, gen_uuid, is_NaN, is_arguments, is_array, is_array_like, is_boolean, is_cn_phone_number, is_email, is_error, is_float, is_function, is_integer, is_leap_year, is_length, is_null, is_number, is_object, is_object_like, is_plain_object, is_positive_float, is_positive_integer, is_string, is_symbol, is_undefined, is_url, mock_, mock_address, mock_avatar, mock_city, mock_created_at, mock_district, mock_email, mock_id, mock_image, mock_ip, mock_nick_name, mock_province, mock_title, mock_unique_id, mock_url, to_array, to_boolean, to_cn_cent, to_cn_pinyin, to_float, to_integer, to_null, to_number, to_string, to_symbol, to_undefined, wow_array, wx_clone_deep, wx_dataset, wx_file_info_sync, wx_image_info_sync, wx_promisify, wx_window_height, wx_window_pixel_ratio, wx_window_width };
