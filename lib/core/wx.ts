@@ -5,8 +5,8 @@ const check = new Check()
 function exception(handle: any) {
   try {
     return handle && check.fun(handle) && handle()
-  } catch (error) {
-    throw Error('This tool only for weapp!')
+  } catch (error: any) {
+    throw Error(error || 'This tool only for weapp!')
   }
 }
 
