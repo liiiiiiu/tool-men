@@ -9,6 +9,18 @@ export declare const is_string: typeof checker.is_string, is_number: typeof chec
 export declare const to_string: typeof transformer.to_string, to_number: typeof transformer.to_number, to_integer: typeof transformer.to_integer, to_float: typeof transformer.to_float, to_cn_cent: typeof transformer.to_cn_cent, to_boolean: typeof transformer.to_boolean, to_array: typeof transformer.to_array, to_symbol: typeof transformer.to_symbol, to_undefined: typeof transformer.to_undefined, to_null: typeof transformer.to_null, to_cn_pinyin: typeof transformer.to_cn_pinyin;
 export declare const gen_uuid: typeof generator.gen_uuid, gen_random_integer: typeof generator.gen_random_integer;
 export declare const d_time: typeof datetTransformer.d_time, d_format: typeof datetTransformer.d_format, d_format_YMD: typeof datetTransformer.d_format_YMD;
-export declare const wx_clone_deep: typeof weapp.wx_clone_deep, wx_dataset: typeof weapp.wx_dataset, wx_promisify: typeof weapp.wx_promisify, wx_window_width: typeof weapp.wx_window_width, wx_window_height: typeof weapp.wx_window_height, wx_window_pixel_ratio: typeof weapp.wx_window_pixel_ratio, wx_image_info_sync: typeof weapp.wx_image_info_sync, wx_file_info_sync: typeof weapp.wx_file_info_sync;
+export declare const wx_clone_deep: typeof weapp.wx_clone_deep, wx_dataset: typeof weapp.wx_dataset, wx_promisify: typeof weapp.wx_promisify, wx_window_width: typeof weapp.wx_window_width, wx_window_height: typeof weapp.wx_window_height, wx_window_pixel_ratio: typeof weapp.wx_window_pixel_ratio, wx_image_info_sync: typeof weapp.wx_image_info_sync, wx_file_info_sync: typeof weapp.wx_file_info_sync, wx_router: {
+    routes: {
+        [key: string]: string;
+    };
+    route: {
+        to: string;
+        from: string;
+        params: any;
+    };
+    push: Function;
+    replace: Function;
+    back: Function;
+};
 export declare const wow_array: typeof enhancer.wow_array;
 export declare const mock_: typeof mocker.mock_, mock_id: typeof mocker.mock_id, mock_unique_id: typeof mocker.mock_unique_id, mock_image: typeof mocker.mock_image, mock_title: typeof mocker.mock_title, mock_avatar: typeof mocker.mock_avatar, mock_nick_name: typeof mocker.mock_nick_name, mock_email: typeof mocker.mock_email, mock_province: typeof mocker.mock_province, mock_city: typeof mocker.mock_city, mock_district: typeof mocker.mock_district, mock_address: typeof mocker.mock_address, mock_url: typeof mocker.mock_url, mock_ip: typeof mocker.mock_ip, mock_created_at: typeof mocker.mock_created_at;

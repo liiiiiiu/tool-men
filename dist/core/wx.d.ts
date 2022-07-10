@@ -68,3 +68,19 @@ export declare function wx_image_info_sync(path: string): any;
  * @returns {Object} File info.
  */
 export declare function wx_file_info_sync(path: string): any;
+/**
+ * Router for Weapp.
+ */
+export declare const wx_router: {
+    routes: {
+        [key: string]: string;
+    };
+    route: {
+        to: string;
+        from: string;
+        params: any;
+    };
+    push: Function;
+    replace: Function;
+    back: Function;
+};

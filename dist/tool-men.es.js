@@ -61,9 +61,6 @@ class Check {
     const tag = this.getTag(value);
     return tag == "[object Error]" || tag == "[object DOMException]" || typeof value.message === "string" && typeof value.name === "string" && !this.plainObj(value);
   }
-  wx() {
-    return typeof window === "object" && !this.nul(window) && window.Object === Object && Object.prototype.hasOwnProperty.call(window, "wx");
-  }
 }
 const check$4 = new Check();
 const rint = /^-?\d+$/;
@@ -1286,7 +1283,7 @@ function exception(handle2) {
   try {
     return handle2 && check$2.fun(handle2) && handle2();
   } catch (error) {
-    throw Error("This tool only for weapp!");
+    throw Error(error || "This tool only for weapp!");
   }
 }
 function wx_clone_deep$1(value) {
@@ -1332,6 +1329,149 @@ function wx_image_info_sync$1(path) {
 function wx_file_info_sync$1(path) {
   return exception(() => wx_promisify$1(wx.getFileInfo)({ filePath: path }));
 }
+class WxRouter {
+  constructor() {
+    this._pages = __wxConfig && __wxConfig.pages || [];
+    this._tabbars = __wxConfig && __wxConfig.tabBar && __wxConfig.tabBar.list && __wxConfig.tabBar.list.length && __wxConfig.tabBar.list.map((_) => _.pagePath) || [];
+    this._routes = {};
+    this._route = null;
+    WxRouter.TABBAR_TAG = "@tabbar";
+    WxRouter.RELAUNCH_TAG = "@relaunch";
+    this.pages2Routes();
+  }
+  get routes() {
+    const temp = {};
+    Object.keys(this._routes).forEach((key2) => {
+      if (key2.indexOf(WxRouter.TABBAR_TAG) === -1) {
+        temp[key2] = this._routes[key2];
+      }
+    });
+    return temp;
+  }
+  get route() {
+    return this._route;
+  }
+  firstUpper(value) {
+    value = value + "";
+    return value.length > 1 ? value[0].toUpperCase() + value.slice(1).toLowerCase() : value.toUpperCase();
+  }
+  path2Join(path) {
+    if (path[0] === "/") {
+      path = path.substring(1);
+    }
+    let arrPath = path.split("/");
+    arrPath.splice(arrPath.length - 1, 1);
+    arrPath = arrPath.map((_) => this.firstUpper(_));
+    return arrPath.join("");
+  }
+  path2ConcatParam(path, params2) {
+    if (!path || !params2 || !check$2.plainObj(params2)) {
+      return path;
+    }
+    if (path.indexOf("?") > 0 || path.indexOf("&") > 0 || path.indexOf("=") > 0) {
+      return path;
+    }
+    let newPath = path + "?";
+    Object.keys(params2).forEach((key2, index, keys) => {
+      newPath += `${key2}=${params2[key2]}${index !== keys.length - 1 ? "&" : ""}`;
+    });
+    return newPath;
+  }
+  path2Check(path) {
+    path = path + "";
+    let isRelaunch = path.indexOf(WxRouter.RELAUNCH_TAG) > -1;
+    if (isRelaunch) {
+      path = path.replace(WxRouter.RELAUNCH_TAG, "");
+    }
+    let newPath = this._routes[path] || this._routes[path + WxRouter.TABBAR_TAG] || path;
+    let isTabbar = !!this._routes[path + WxRouter.TABBAR_TAG] || path.indexOf(WxRouter.TABBAR_TAG) > -1;
+    return { newPath: newPath.replace(WxRouter.TABBAR_TAG, ""), isTabbar, isRelaunch };
+  }
+  container4Callback(successCallback, failCallback, completeCallback) {
+    return {
+      success: (res) => {
+        successCallback && check$2.fun(successCallback) && successCallback(res);
+      },
+      fail: (err) => {
+        failCallback && check$2.fun(failCallback) && failCallback(err);
+      },
+      complete: (res) => {
+        completeCallback && check$2.fun(completeCallback) && completeCallback(res);
+      }
+    };
+  }
+  log4Route(path, params2) {
+    if (!path)
+      return;
+    const pages = getCurrentPages();
+    const page = pages[pages.length - 1];
+    this._route = {
+      from: page.route,
+      to: typeof path === "number" ? pages[pages.length - path < 0 ? 0 : pages.length - path].route : path,
+      params: params2
+    };
+  }
+  pages2Routes() {
+    let tabbarRoutes = [];
+    if (this._tabbars.length) {
+      let i2 = -1, l = this._tabbars.length;
+      while (++i2 < l) {
+        tabbarRoutes.push(this.path2Join(this._tabbars[i2]));
+      }
+    }
+    if (this._pages.length) {
+      let i2 = 0, l = this._pages.length;
+      for (; i2 < l; i2++) {
+        let route, page;
+        route = page = this._pages[i2];
+        route = this.path2Join(route);
+        Object.assign(this._routes, {
+          [route]: "/" + page
+        });
+        if (tabbarRoutes.includes(route)) {
+          Object.assign(this._routes, {
+            [route + WxRouter.TABBAR_TAG]: "/" + page
+          });
+        }
+      }
+    } else {
+      console.warn("[wx_router] Unable to get `pages` from app.json, url is needed!");
+    }
+  }
+  push(path, params2, successCallback, failCallback, completeCallback) {
+    if (!path)
+      return;
+    const { newPath, isTabbar } = this.path2Check(path);
+    this.log4Route(newPath, params2);
+    (!isTabbar ? wx.navigateTo : wx.switchTab)({
+      url: !isTabbar ? this.path2ConcatParam(newPath, params2) : newPath,
+      ...this.container4Callback(successCallback, failCallback, completeCallback)
+    });
+  }
+  replace(path, params2, successCallback, failCallback, completeCallback) {
+    if (!path)
+      return;
+    const { newPath, isTabbar, isRelaunch } = this.path2Check(path);
+    this.log4Route(newPath, params2);
+    (!isRelaunch ? wx.redirectTo : wx.reLaunch)({
+      url: !isTabbar ? this.path2ConcatParam(newPath, params2) : newPath,
+      ...this.container4Callback(successCallback, failCallback, completeCallback)
+    });
+  }
+  back(delta, successCallback, failCallback, completeCallback) {
+    if (!check$2.num(delta) || delta && delta < 1) {
+      delta = 1;
+    }
+    this.log4Route(delta || 1, null);
+    wx.navigateBack({
+      delta,
+      ...this.container4Callback(successCallback, failCallback, completeCallback)
+    });
+  }
+}
+const wx_router$1 = exception(() => {
+  return new WxRouter();
+});
 var weapp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   wx_clone_deep: wx_clone_deep$1,
@@ -1341,7 +1481,8 @@ var weapp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty(
   wx_window_height: wx_window_height$1,
   wx_window_pixel_ratio: wx_window_pixel_ratio$1,
   wx_image_info_sync: wx_image_info_sync$1,
-  wx_file_info_sync: wx_file_info_sync$1
+  wx_file_info_sync: wx_file_info_sync$1,
+  wx_router: wx_router$1
 }, Symbol.toStringTag, { value: "Module" }));
 const check$1 = new Check();
 const cast$1 = new Cast();
@@ -8639,7 +8780,8 @@ const {
   wx_window_height,
   wx_window_pixel_ratio,
   wx_image_info_sync,
-  wx_file_info_sync
+  wx_file_info_sync,
+  wx_router
 } = weapp;
 const {
   wow_array
@@ -8661,4 +8803,4 @@ const {
   mock_ip,
   mock_created_at
 } = mocker;
-export { d_format, d_format_YMD, d_time, gen_random_integer, gen_uuid, is_NaN, is_arguments, is_array, is_array_like, is_boolean, is_cn_phone_number, is_email, is_error, is_float, is_function, is_integer, is_leap_year, is_length, is_null, is_number, is_object, is_object_like, is_plain_object, is_positive_float, is_positive_integer, is_string, is_symbol, is_undefined, is_url, mock_, mock_address, mock_avatar, mock_city, mock_created_at, mock_district, mock_email, mock_id, mock_image, mock_ip, mock_nick_name, mock_province, mock_title, mock_unique_id, mock_url, to_array, to_boolean, to_cn_cent, to_cn_pinyin, to_float, to_integer, to_null, to_number, to_string, to_symbol, to_undefined, wow_array, wx_clone_deep, wx_dataset, wx_file_info_sync, wx_image_info_sync, wx_promisify, wx_window_height, wx_window_pixel_ratio, wx_window_width };
+export { d_format, d_format_YMD, d_time, gen_random_integer, gen_uuid, is_NaN, is_arguments, is_array, is_array_like, is_boolean, is_cn_phone_number, is_email, is_error, is_float, is_function, is_integer, is_leap_year, is_length, is_null, is_number, is_object, is_object_like, is_plain_object, is_positive_float, is_positive_integer, is_string, is_symbol, is_undefined, is_url, mock_, mock_address, mock_avatar, mock_city, mock_created_at, mock_district, mock_email, mock_id, mock_image, mock_ip, mock_nick_name, mock_province, mock_title, mock_unique_id, mock_url, to_array, to_boolean, to_cn_cent, to_cn_pinyin, to_float, to_integer, to_null, to_number, to_string, to_symbol, to_undefined, wow_array, wx_clone_deep, wx_dataset, wx_file_info_sync, wx_image_info_sync, wx_promisify, wx_router, wx_window_height, wx_window_pixel_ratio, wx_window_width };

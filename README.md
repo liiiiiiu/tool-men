@@ -150,3 +150,63 @@ Get the mock data needed in development quickly.
 | wx_window_pixel_ratio | wx_window_pixel_ratio() |  2 |
 | wx_image_info_sync | wx_image_info_sync(path) |   |
 | wx_file_info_sync | wx_file_info_sync(path) |   |
+
+#### wx_router
+
+**Router for Weapp.**
+
+```javascript
+// Get the Collections of the `routes`.
+// Which includes all pages in your preject.
+wx_router.routes
+// {
+//   PagesIndex: "/pages/index/index"
+//   PagesLogs: "/pages/logs/logs"
+//   PagesMyIndex: "/pages/my/index/index"
+// }
+
+// Get the Collections of the `route`.
+wx_router.route
+// {
+//   from: "pages/index/index"
+//   params: null
+//   to: "/pages/logs/logs"
+// }
+
+// Call wx.navigateTo or wx.switchTab.
+// Will automatically use `wx.navigateTo` or `wx.switchTab`.
+
+// You can use the shorthand of the `path`, and the specific path will be build automatically(not include the last level).
+// `/pages/logs/logs` => `PagesLogs`
+wx_router.push('PagesLogs')
+
+// Use the specific path.
+wx_router.push('/pages/logs/logs')
+
+// Use the `routes`.
+wx_router.push(wx_router.routes.PagesLogs)
+
+
+// Call wx.redirectTo or wx.reLaunch.
+
+// Use `wx.redirectTo`.
+// You can use the shorthand of the `path`, and the specific path will be build automatically(not include the last level).
+// `/pages/logs/logs` => `PagesLogs`
+wx_router.replace('PagesLogs')
+
+// Add `@relaunch` tag to use `wx.reLaunch`.
+wx_router.replace(`PagesLogs@relaunch`, null, (res: any) => {console.log(res)})
+
+// Use the specific path.
+wx_router.replace('/pages/logs/logs')
+
+// Use the `routes`.
+wx_router.replace(wx_router.routes.PagesLogs)
+
+
+// Exactly like wx.navigateBack.
+
+wx_router.back()
+
+wx_router.back(2, () => (res: any) => {console.log(res)})
+```
