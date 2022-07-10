@@ -156,6 +156,8 @@ Get the mock data needed in development quickly.
 **Router for Weapp.**
 
 ```javascript
+import { wx_router } from 'tool-men'
+
 // Get the Collections of the `routes`.
 // Which includes all pages in your preject.
 wx_router.routes
