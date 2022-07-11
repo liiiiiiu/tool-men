@@ -6,7 +6,7 @@ function exception(handle: any) {
   try {
     return handle && check.fun(handle) && handle()
   } catch (error: any) {
-    throw Error(error || 'This tool only for weapp!')
+    // throw Error(error || 'This tool only for weapp!')
   }
 }
 

@@ -1,6 +1,6 @@
-import Big from 'big.js'
 import Cast from '../helper/cast'
 import makePy from '../helper/local/chinese2py'
+import { accMul } from '../helper/calc'
 
 const cast = new Cast()
 
@@ -115,7 +115,7 @@ export function to_float(value: unknown, decimal: 1 | 2 = 2, round: boolean = fa
 export function to_cn_cent(value: unknown, round: boolean = false): number {
   let newValue = +to_float(value, 2, round) || 0
 
-  return parseInt(Big(newValue).times(100) + '') || 0
+  return parseInt(accMul(newValue, 100) + '') || 0
 }
 
 /**
