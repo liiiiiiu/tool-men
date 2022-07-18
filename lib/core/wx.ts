@@ -201,8 +201,8 @@ class WxRouter {
 
     let arrPath = path.split('/')
     arrPath.splice(arrPath.length - 1, 1)
-    arrPath = arrPath.map(_ => this.path2Camel(_))
     arrPath = arrPath.map(_ => this.firstUpper(_))
+    arrPath = arrPath.map(_ => this.path2Camel(_))
 
     return arrPath.join('')
   }
