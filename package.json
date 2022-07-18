@@ -1,6 +1,6 @@
 {
   "name": "tool-men",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Tool Men! 工具“人” ~",
   "scripts": {
     "dev": "vite",

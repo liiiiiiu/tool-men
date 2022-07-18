@@ -859,12 +859,17 @@ class WxRouter {
     value = value + "";
     return value.length > 1 ? value[0].toUpperCase() + value.slice(1).toLowerCase() : value.toUpperCase();
   }
+  path2Camel(value) {
+    value = value + "";
+    return value.replace(/([^_-])(?:[_-]+([^_-]))/g, (_$0, $1, $2) => $1 + $2.toUpperCase()).replace(/[_-]*/g, "");
+  }
   path2Join(path) {
     if (path[0] === "/") {
       path = path.substring(1);
     }
     let arrPath = path.split("/");
     arrPath.splice(arrPath.length - 1, 1);
+    arrPath = arrPath.map((_) => this.path2Camel(_));
     arrPath = arrPath.map((_) => this.firstUpper(_));
     return arrPath.join("");
   }

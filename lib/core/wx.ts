@@ -189,6 +189,11 @@ class WxRouter {
     return value.length > 1 ? value[0].toUpperCase() + value.slice(1).toLowerCase() : value.toUpperCase()
   }
 
+  protected path2Camel(value: string): string {
+    value = value + ''
+    return value.replace(/([^_-])(?:[_-]+([^_-]))/g, (_$0: string, $1: string, $2: string) => $1 + $2.toUpperCase()).replace(/[_-]*/g, '')
+  }
+
   protected path2Join(path: string): string {
     if (path[0] === '/') {
       path = path.substring(1)
@@ -196,6 +201,7 @@ class WxRouter {
 
     let arrPath = path.split('/')
     arrPath.splice(arrPath.length - 1, 1)
+    arrPath = arrPath.map(_ => this.path2Camel(_))
     arrPath = arrPath.map(_ => this.firstUpper(_))
 
     return arrPath.join('')
