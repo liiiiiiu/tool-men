@@ -67,7 +67,8 @@ export const {
   wx_window_pixel_ratio,
   wx_image_info_sync,
   wx_file_info_sync,
-  wx_router
+  wx_router,
+  ResponseView
 } = weapp
 
 export const {
@@ -91,14 +92,3 @@ export const {
   mock_ip,
   mock_created_at,
 } = mocker
-
-const arr = wow_array([1, 2, 3 ,4, 5])
-
-const comments = wow_array([
-  { id: 1, parent_id: null },
-  { id: 2, parent_id: 1 },
-  { id: 3, parent_id: 1 },
-  { id: 4, parent_id: 2 },
-  { id: 5, parent_id: 4 }
-]);
-console.log('wow_array', arr.shuffle, arr.nest(null, 'parent_id'));

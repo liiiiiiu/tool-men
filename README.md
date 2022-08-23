@@ -26,7 +26,6 @@ import * as utils from 'tool-men'
 
 ```javascript
 let arr = wow_array([1, 2, 3])
-
 arr[0] // 1
 arr[-1] // 3
 arr.first // 1
@@ -40,6 +39,16 @@ arr['::-1'] // [3, 2, 1]
 arr.min // 1
 arr.max // 3
 arr.remove(0, val => val === 3) // [2]
+arr.shuffle // [1, 3, 2]
+
+let nestArr = wow_array([
+  { id: 1, parent_id: null },
+  { id: 2, parent_id: 1 },
+  { id: 3, parent_id: 1 },
+  { id: 4, parent_id: 2 },
+  { id: 5, parent_id: 4 }
+])
+nestArr.nest(null, 'parent_id')
 ```
 
 ### is

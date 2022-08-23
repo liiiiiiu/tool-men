@@ -476,3 +476,401 @@ export const wx_router: {
   } = exception(() => {
   return new WxRouter()
 })
+
+/**
+ * ResponseView 响应视图
+ *
+ * 在发送请求到后端并获得响应数据后，自动处理、控制与 wxml 中的数据绑定；
+ *
+ * 这里的数据绑定包括 “渲染数据” “是否为空数据” “全部数据是否加载完毕” “分页数” 等。
+ */
+export class ResponseView {
+  protected page: {
+    data: {
+      [prop: string]: unknown
+    },
+    setData: Function
+  }
+
+  protected config: {
+    view_key_prefix?: string
+    loading_title?: string
+    loading_mask?: boolean
+    show_success_toast?: boolean
+    success_toast_title?: string
+    show_fail_toast?: boolean
+    fail_toast_title?: string
+  }
+
+  // 存储接口返回的数据实体的对象键名
+  protected objKey: string
+  // 对象的初始值
+  protected objInitialValue: unknown
+
+  // 存储与视图交互的对象键名
+  protected viewKey: string
+  // 存储与视图交互的对象键值
+  protected viewValue: {
+    // 分页
+    reqPage: number,
+    // 请求加载状态
+    reqLoading: boolean,
+    // 是否为空数据
+    empty: boolean,
+    // 全部数据是否加载完毕（用于分页加载）
+    last: boolean,
+  }
+
+  // 存储后端响应返回的数据
+  protected resValue: {
+    // 接口返回的数据实体
+    data: any
+    // 分页请求下全部数据的总数
+    total?: number
+  }
+
+  constructor(key: string, config = {
+    view_key_prefix: '$',
+    loading_title: '加载中',
+    loading_mask: true,
+    show_success_toast: true,
+    success_toast_title: '提交成功',
+    show_fail_toast: true,
+    fail_toast_title: '提交失败，请重试'
+  }) {
+    // @ts-ignore
+    const pages = getCurrentPages()
+    const page = pages[pages.length - 1]
+    if (!page || !key) {
+      throw Error(`[ResponseView] ${!page ? 'Page' : 'Key'} not found!`)
+    }
+
+    this.page = page
+    this.config = config
+    this.objKey = key
+    this.objInitialValue = this.page.data[key]
+    this.viewKey = this.config.view_key_prefix + key
+    this.viewValue = this.resetViewValue()
+
+    if (this.page.data[this.viewKey] = {}) {
+      this.page.data[this.viewKey] = this.viewValue
+    }
+
+    this.resValue = {
+      data: this.objInitialValue,
+      total: 0
+    }
+  }
+
+  protected resetObjValue() {
+    return typeof this.objInitialValue === 'object' ? JSON.parse(JSON.stringify(this.objInitialValue)) : this.objInitialValue
+  }
+
+  protected resetViewValue() {
+    return {
+      reqPage: 1,
+      reqLoading: false,
+      empty: false,
+      last: false,
+    }
+  }
+
+  get showLoading() {
+    // @ts-ignore
+    return wx.showLoading({
+      title: this.config.loading_title || '加载中',
+      mask: this.config.loading_mask
+    })
+  }
+  get hideLoading() {
+    // @ts-ignore
+    return wx.hideLoading()
+  }
+
+  get showNavigationBarLoading() {
+    // @ts-ignore
+    return wx.showNavigationBarLoading()
+  }
+  get hideNavigationBarLoading() {
+    // @ts-ignore
+    return wx.hideNavigationBarLoading()
+  }
+
+  get startPullDownRefresh() {
+    // @ts-ignore
+    return wx.startPullDownRefresh()
+  }
+  get stopPullDownRefresh() {
+    // @ts-ignore
+    return wx.stopPullDownRefresh()
+  }
+
+  protected get reqLoading() {
+    return this.viewValue.reqLoading
+  }
+  protected set reqLoading(state: boolean) {
+    this.viewValue.reqLoading = state
+  }
+
+  protected get reqPage() {
+    return this.viewValue.reqPage
+  }
+  protected set reqPage(page: number) {
+    this.viewValue.reqPage = page
+  }
+
+  protected get empty() {
+    return this.viewValue.empty
+  }
+  protected set empty(state: boolean) {
+    this.viewValue.empty = state
+  }
+
+  protected get last() {
+    return this.viewValue.last
+  }
+  protected set last(state: boolean) {
+    this.viewValue.last = state
+  }
+
+  get clear() {
+    this.page.data[this.objKey] = this.resetObjValue()
+    this.page.data[this.viewKey] = this.viewValue = this.resetViewValue()
+    return true
+  }
+
+  /**
+   * 发起 GET 请求获取列表数据
+   *
+   * @param {Function} sendRequest 发送请求函数，接收 ResponseView 传入的分页
+   * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+   * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+   * @param {boolean} reachBottom 是否正在执行页面上拉触底事件
+   */
+  public async fetchList(sendRequest: Function, successCallback?: Function | null, failCallback?: Function | null, reachBottom: boolean = false) {
+    if (reachBottom && (this.empty || this.last)) return
+
+    if (this.reqLoading) return
+    this.reqLoading = true
+
+    !reachBottom ? this.clear : (this.reqPage = this.reqPage + 1)
+
+    this.showLoading
+
+    const triggerViewValueWhenRequestSuccess = (res: any) => {
+      let total = res?.total || res?.data?.length || 0
+      let isEmpty = !total && this.reqPage === 1
+      let isLast = isEmpty || (!res?.data?.length && this.reqPage > 1)
+      this.empty = isEmpty
+      this.last = isLast
+      this.page.setData({
+        [`${this.viewKey}.empty`]: isEmpty,
+        [`${this.viewKey}.last`]: isLast
+      })
+    }
+    const triggerViewValueWhenRequestFail = () => {
+      this.empty = true
+      this.last = false
+      this.page.setData({
+        [`${this.viewKey}.empty`]: true,
+        [`${this.viewKey}.last`]: false
+      })
+    }
+
+    let res = null
+
+    try {
+      sendRequest && ((res = await sendRequest(this.reqPage)), this.hideLoading, (this.reqLoading = false))
+
+      if (res) {
+        if (res.data) {
+          this.page.setData({
+            [this.objKey]: (this.page.data[this.objKey] as any[]).concat(res.data)
+          })
+        }
+
+        triggerViewValueWhenRequestSuccess(res)
+
+        successCallback && successCallback(res)
+
+        console.log('[ResponseView] fetchList 👇')
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        console.log(`${this.objKey} `, this.page.data[this.objKey])
+        console.log(`${this.viewKey} `, this.page.data[this.viewKey])
+        console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+      } else {
+        triggerViewValueWhenRequestFail()
+
+        failCallback && failCallback(res)
+      }
+    } catch (error: any) {
+      console.error(`[ResponseView] ${error}`)
+
+      this.hideLoading
+
+      this.reqLoading = false
+
+      triggerViewValueWhenRequestFail()
+
+      failCallback && failCallback(error)
+    }
+  }
+
+  /**
+   * 发起 GET 请求获取数据
+   *
+   * @param {Function} sendRequest 发送请求函数
+   * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+   * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+   */
+  public async fetch(sendRequest: Function, successCallback?: Function | null, failCallback?: Function | null) {
+    if (this.reqLoading) return
+    this.reqLoading = true
+
+    this.clear
+
+    this.showLoading
+
+    const triggerViewValueWhenRequestSuccess = (res: any) => {
+      let total = res?.total || (!!res?.data ? 1 : 0) || 0
+      let isEmpty = !total && this.reqPage === 1
+      let isLast = true
+      this.empty = isEmpty
+      this.last = isLast
+      this.page.setData({
+        [`${this.viewKey}.empty`]: isEmpty,
+        [`${this.viewKey}.last`]: isLast
+      })
+    }
+    const triggerViewValueWhenRequestFail = () => {
+      this.empty = true
+      this.last = false
+      this.page.setData({
+        [`${this.viewKey}.empty`]: true,
+        [`${this.viewKey}.last`]: false
+      })
+    }
+
+    let res = null
+
+    try {
+      sendRequest && ((res = await sendRequest()), this.hideLoading, (this.reqLoading = false))
+
+      if (res) {
+        if (res.data) {
+          this.page.setData({
+            [this.objKey]: res.data
+          })
+        }
+
+        triggerViewValueWhenRequestSuccess(res)
+
+        successCallback && successCallback(res)
+
+        console.log('[ResponseView] fetch 👇')
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        console.log(`${this.objKey} `, this.page.data[this.objKey])
+        console.log(`${this.viewKey} `, this.page.data[this.viewKey])
+        console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+      } else {
+        triggerViewValueWhenRequestFail()
+
+        failCallback && failCallback(res)
+      }
+    } catch (error: any) {
+      console.error(`[ResponseView] ${error}`)
+
+      this.hideLoading
+
+      this.reqLoading = false
+
+      triggerViewValueWhenRequestFail()
+
+      failCallback && failCallback(error)
+    }
+  }
+
+  protected async common(sendRequest: Function, successCallback?: Function | null, failCallback?: Function | null) {
+    if (this.reqLoading) return
+    this.reqLoading = true
+
+    this.showLoading
+
+    let res = null
+
+    try {
+      sendRequest && ((res = await sendRequest()), this.hideLoading, (this.reqLoading = false))
+
+      if (res) {
+        if (res.data && this.config.show_success_toast) {
+          // @ts-ignore
+          wx.showToast({
+            title: this.config.success_toast_title || '提交成功',
+            icon: 'success'
+          })
+        }
+
+        successCallback && successCallback(res)
+      } else {
+        if (this.config.show_fail_toast) {
+          // @ts-ignore
+          wx.showToast({
+            title: this.config.fail_toast_title || '提交失败，请重试',
+            icon: 'none'
+          })
+        }
+
+        failCallback && failCallback(res)
+      }
+    } catch (error: any) {
+      console.error(`[ResponseView] ${error}`)
+
+      if (this.config.show_fail_toast) {
+        // @ts-ignore
+        wx.showToast({
+          title: this.config.fail_toast_title || '提交失败，请重试',
+          icon: 'none'
+        })
+      }
+
+      this.hideLoading
+
+      this.reqLoading = false
+
+      failCallback && failCallback(error)
+    }
+  }
+
+  /**
+   * 发起 POST 请求新增数据
+   *
+   * @param {Function} sendRequest 发送请求函数
+   * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+   * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+   */
+  public async post(sendRequest: Function, successCallback?: Function | null, failCallback?: Function | null) {
+    this.common(sendRequest, successCallback, failCallback)
+  }
+
+  /**
+   * 发起 PUT 请求更新数据
+   *
+   * @param {Function} sendRequest 发送请求函数
+   * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+   * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+   */
+  public put(sendRequest: Function, successCallback?: Function | null, failCallback?: Function | null) {
+    this.common(sendRequest, successCallback, failCallback)
+  }
+
+  /**
+   * 发起 DELETE 请求删除数据
+   *
+   * @param {Function} sendRequest 发送请求函数
+   * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+   * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+   */
+  public delete(sendRequest: Function, successCallback?: Function | null, failCallback?: Function | null) {
+    this.common(sendRequest, successCallback, failCallback)
+  }
+}
