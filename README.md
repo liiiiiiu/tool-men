@@ -346,3 +346,18 @@ Page({
   },
 })
 ```
+
+```html
+<view class="page-container">
+  <view class="page-list-for-my-message">
+    <view wx:if="{{ messageList && messageList.length }}" class="message-list">
+      <view wx:for="{{ messageList }}" wx:key="index" class="message-list-item">
+        <message-item item="{{ item }}" />
+      </view>
+    </view>
+    <!-- $messageList 由 ResponseView 生成 -->
+    <van-empty wx:if="{{ $messageList.empty }}" description="敬请期待" />
+    <van-divider wx:if="{{ $messageList.last }}" contentPosition="center">已经到底了</van-divider>
+  </view>
+</view>
+```
