@@ -224,6 +224,10 @@ wx_router.back(2, () => (res: any) => {console.log(res)})
 
 #### ResponseView
 
+在发送请求到后端并获得响应数据后，自动处理、控制与 wxml 中的数据绑定；
+
+这里的数据绑定包括 “渲染数据” “是否为空数据” “全部数据是否加载完毕” “分页数” 等。
+
 ```javascript
 import { ResponseView } from 'tool-men'
 
