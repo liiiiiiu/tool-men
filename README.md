@@ -221,3 +221,124 @@ wx_router.back()
 
 wx_router.back(2, () => (res: any) => {console.log(res)})
 ```
+
+#### ResponseView
+
+```javascript
+import { ResponseView } from 'tool-men'
+
+let messageListMockData = [{
+  id: 1,
+  thumbnail: '/assets/hotel-pic-1-1.jpg',
+  name: 'xxx酒店',
+  check_in_at: '2022/07/12',
+  check_out_at: '2022/07/22',
+  created_at: ''
+},{
+  id: 1,
+  thumbnail: '/assets/hotel-pic-1-1.jpg',
+  name: 'xxx酒店',
+  check_in_at: '2022/07/12',
+  check_out_at: '2022/07/22',
+  created_at: ''
+},{
+  id: 1,
+  thumbnail: '/assets/hotel-pic-1-1.jpg',
+  name: 'xxx酒店',
+  check_in_at: '2022/07/12',
+  check_out_at: '2022/07/22',
+  created_at: ''
+},{
+  id: 1,
+  thumbnail: '/assets/hotel-pic-1-1.jpg',
+  name: 'xxx酒店',
+  check_in_at: '2022/07/12',
+  check_out_at: '2022/07/22',
+  created_at: ''
+},{
+  id: 1,
+  thumbnail: '/assets/hotel-pic-1-1.jpg',
+  name: 'xxx酒店',
+  check_in_at: '2022/07/12',
+  check_out_at: '2022/07/22',
+  created_at: ''
+}]
+let userMockData = {
+  name: '小明',
+  age: 13
+}
+
+let responseViewForMessageList: ResponseView
+let responseViewForUser: ResponseView
+
+Page({
+  data: {
+    messageList: [],
+    user: {}
+  },
+
+  async onLoad() {
+    // ResponseView 的实例化必须在 Page 函数体内
+
+    responseViewForMessageList = new ResponseView('messageList')
+    await responseViewForMessageList.fetchList((page: number) => {
+      return {
+        data: messageListMockData,
+        total: messageListMockData.length
+      }
+    })
+
+    responseViewForUser = new ResponseView('user')
+    await responseViewForUser.fetch(() => {
+      return {
+        data: userMockData,
+        total: 1
+      }
+    })
+
+    await responseViewForUser.post(() => {
+      return {
+        data: true
+      }
+    }, () => {
+      console.log('after post user')
+    })
+
+    await responseViewForUser.put(() => {
+      return {
+        data: true
+      }
+    }, () => {
+      console.log('after put user')
+    })
+
+    await responseViewForUser.delete(() => {
+      return {
+        data: true
+      }
+    }, () => {
+      console.log('after delete user')
+    })
+  },
+
+  async onPullDownRefresh() {
+    await responseViewForMessageList.fetchList((page: number) => {
+      return {
+        data: messageListMockData,
+        total: messageListMockData.length
+      }
+    })
+
+    responseViewForMessageList.stopPullDownRefresh
+  },
+
+  async onReachBottom() {
+    responseViewForMessageList.fetchList((page: number) => {
+      return {
+        data: [],
+        total: messageListMockData.length
+      }
+    }, null, null, true)
+  },
+})
+```
