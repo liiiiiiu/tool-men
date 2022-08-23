@@ -4,6 +4,8 @@ interface WowArrayType {
     min?: any;
     max?: any;
     remove: any[];
+    shuffle: any[];
+    nest: any;
     [prop: string]: any[];
 }
 /**

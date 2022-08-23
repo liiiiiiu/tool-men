@@ -981,6 +981,253 @@ class WxRouter {
 const wx_router$1 = exception(() => {
   return new WxRouter();
 });
+class ResponseView$1 {
+  constructor(key2, config = {
+    view_key_prefix: "$",
+    loading_title: "\u52A0\u8F7D\u4E2D",
+    loading_mask: true,
+    show_success_toast: true,
+    success_toast_title: "\u63D0\u4EA4\u6210\u529F",
+    show_fail_toast: true,
+    fail_toast_title: "\u63D0\u4EA4\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5"
+  }) {
+    const pages = getCurrentPages();
+    const page = pages[pages.length - 1];
+    if (!page || !key2) {
+      throw Error(`[ResponseView] ${!page ? "Page" : "Key"} not found!`);
+    }
+    this.page = page;
+    this.config = config;
+    this.objKey = key2;
+    this.objInitialValue = this.page.data[key2];
+    this.viewKey = this.config.view_key_prefix + key2;
+    this.viewValue = this.resetViewValue();
+    if (this.page.data[this.viewKey] = {}) {
+      this.page.data[this.viewKey] = this.viewValue;
+    }
+    this.resValue = {
+      data: this.objInitialValue,
+      total: 0
+    };
+  }
+  resetObjValue() {
+    return typeof this.objInitialValue === "object" ? JSON.parse(JSON.stringify(this.objInitialValue)) : this.objInitialValue;
+  }
+  resetViewValue() {
+    return {
+      reqPage: 1,
+      reqLoading: false,
+      empty: false,
+      last: false
+    };
+  }
+  get showLoading() {
+    return wx.showLoading({
+      title: this.config.loading_title || "\u52A0\u8F7D\u4E2D",
+      mask: this.config.loading_mask
+    });
+  }
+  get hideLoading() {
+    return wx.hideLoading();
+  }
+  get showNavigationBarLoading() {
+    return wx.showNavigationBarLoading();
+  }
+  get hideNavigationBarLoading() {
+    return wx.hideNavigationBarLoading();
+  }
+  get startPullDownRefresh() {
+    return wx.startPullDownRefresh();
+  }
+  get stopPullDownRefresh() {
+    return wx.stopPullDownRefresh();
+  }
+  get reqLoading() {
+    return this.viewValue.reqLoading;
+  }
+  set reqLoading(state) {
+    this.viewValue.reqLoading = state;
+  }
+  get reqPage() {
+    return this.viewValue.reqPage;
+  }
+  set reqPage(page) {
+    this.viewValue.reqPage = page;
+  }
+  get empty() {
+    return this.viewValue.empty;
+  }
+  set empty(state) {
+    this.viewValue.empty = state;
+  }
+  get last() {
+    return this.viewValue.last;
+  }
+  set last(state) {
+    this.viewValue.last = state;
+  }
+  get clear() {
+    this.page.data[this.objKey] = this.resetObjValue();
+    this.page.data[this.viewKey] = this.viewValue = this.resetViewValue();
+    return true;
+  }
+  async fetchList(sendRequest, successCallback, failCallback, reachBottom = false) {
+    if (reachBottom && (this.empty || this.last))
+      return;
+    if (this.reqLoading)
+      return;
+    this.reqLoading = true;
+    !reachBottom ? this.clear : this.reqPage = this.reqPage + 1;
+    this.showLoading;
+    const triggerViewValueWhenRequestSuccess = (res2) => {
+      var _a, _b;
+      let total = (res2 == null ? void 0 : res2.total) || ((_a = res2 == null ? void 0 : res2.data) == null ? void 0 : _a.length) || 0;
+      let isEmpty = !total && this.reqPage === 1;
+      let isLast = isEmpty || !((_b = res2 == null ? void 0 : res2.data) == null ? void 0 : _b.length) && this.reqPage > 1;
+      this.empty = isEmpty;
+      this.last = isLast;
+      this.page.setData({
+        [`${this.viewKey}.empty`]: isEmpty,
+        [`${this.viewKey}.last`]: isLast
+      });
+    };
+    const triggerViewValueWhenRequestFail = () => {
+      this.empty = true;
+      this.last = false;
+      this.page.setData({
+        [`${this.viewKey}.empty`]: true,
+        [`${this.viewKey}.last`]: false
+      });
+    };
+    let res = null;
+    try {
+      sendRequest && (res = await sendRequest(this.reqPage), this.hideLoading, this.reqLoading = false);
+      if (res) {
+        if (res.data) {
+          this.page.setData({
+            [this.objKey]: this.page.data[this.objKey].concat(res.data)
+          });
+        }
+        triggerViewValueWhenRequestSuccess(res);
+        successCallback && successCallback(res);
+        console.log("[ResponseView] fetchList \u{1F447}");
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        console.log(`${this.objKey} `, this.page.data[this.objKey]);
+        console.log(`${this.viewKey} `, this.page.data[this.viewKey]);
+        console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+      } else {
+        triggerViewValueWhenRequestFail();
+        failCallback && failCallback(res);
+      }
+    } catch (error) {
+      console.error(`[ResponseView] ${error}`);
+      this.hideLoading;
+      this.reqLoading = false;
+      triggerViewValueWhenRequestFail();
+      failCallback && failCallback(error);
+    }
+  }
+  async fetch(sendRequest, successCallback, failCallback) {
+    if (this.reqLoading)
+      return;
+    this.reqLoading = true;
+    this.clear;
+    this.showLoading;
+    const triggerViewValueWhenRequestSuccess = (res2) => {
+      let total = (res2 == null ? void 0 : res2.total) || (!!(res2 == null ? void 0 : res2.data) ? 1 : 0) || 0;
+      let isEmpty = !total && this.reqPage === 1;
+      let isLast = true;
+      this.empty = isEmpty;
+      this.last = isLast;
+      this.page.setData({
+        [`${this.viewKey}.empty`]: isEmpty,
+        [`${this.viewKey}.last`]: isLast
+      });
+    };
+    const triggerViewValueWhenRequestFail = () => {
+      this.empty = true;
+      this.last = false;
+      this.page.setData({
+        [`${this.viewKey}.empty`]: true,
+        [`${this.viewKey}.last`]: false
+      });
+    };
+    let res = null;
+    try {
+      sendRequest && (res = await sendRequest(), this.hideLoading, this.reqLoading = false);
+      if (res) {
+        if (res.data) {
+          this.page.setData({
+            [this.objKey]: res.data
+          });
+        }
+        triggerViewValueWhenRequestSuccess(res);
+        successCallback && successCallback(res);
+        console.log("[ResponseView] fetch \u{1F447}");
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        console.log(`${this.objKey} `, this.page.data[this.objKey]);
+        console.log(`${this.viewKey} `, this.page.data[this.viewKey]);
+        console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+      } else {
+        triggerViewValueWhenRequestFail();
+        failCallback && failCallback(res);
+      }
+    } catch (error) {
+      console.error(`[ResponseView] ${error}`);
+      this.hideLoading;
+      this.reqLoading = false;
+      triggerViewValueWhenRequestFail();
+      failCallback && failCallback(error);
+    }
+  }
+  async common(sendRequest, successCallback, failCallback) {
+    if (this.reqLoading)
+      return;
+    this.reqLoading = true;
+    this.showLoading;
+    let res = null;
+    try {
+      sendRequest && (res = await sendRequest(), this.hideLoading, this.reqLoading = false);
+      if (res) {
+        if (res.data && this.config.show_success_toast) {
+          wx.showToast({
+            title: this.config.success_toast_title || "\u63D0\u4EA4\u6210\u529F",
+            icon: "success"
+          });
+        }
+        successCallback && successCallback(res);
+      } else {
+        if (this.config.show_fail_toast) {
+          wx.showToast({
+            title: this.config.fail_toast_title || "\u63D0\u4EA4\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5",
+            icon: "none"
+          });
+        }
+        failCallback && failCallback(res);
+      }
+    } catch (error) {
+      console.error(`[ResponseView] ${error}`);
+      if (this.config.show_fail_toast) {
+        wx.showToast({
+          title: this.config.fail_toast_title || "\u63D0\u4EA4\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5",
+          icon: "none"
+        });
+      }
+      this.hideLoading;
+      this.reqLoading = false;
+      failCallback && failCallback(error);
+    }
+  }
+  async post(sendRequest, successCallback, failCallback) {
+    this.common(sendRequest, successCallback, failCallback);
+  }
+  put(sendRequest, successCallback, failCallback) {
+    this.common(sendRequest, successCallback, failCallback);
+  }
+  delete(sendRequest, successCallback, failCallback) {
+    this.common(sendRequest, successCallback, failCallback);
+  }
+}
 var weapp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   wx_clone_deep: wx_clone_deep$1,
@@ -991,7 +1238,8 @@ var weapp = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty(
   wx_window_pixel_ratio: wx_window_pixel_ratio$1,
   wx_image_info_sync: wx_image_info_sync$1,
   wx_file_info_sync: wx_file_info_sync$1,
-  wx_router: wx_router$1
+  wx_router: wx_router$1,
+  ResponseView: ResponseView$1
 }, Symbol.toStringTag, { value: "Module" }));
 const check$1 = new Check();
 const cast$1 = new Cast();
@@ -1100,6 +1348,20 @@ function batchRemove(target) {
     return temp;
   };
 }
+function arrayShuffle([...result]) {
+  let m = result.length;
+  while (m) {
+    let n = Math.floor(Math.random() * m--);
+    [result[m], result[n]] = [result[n], result[m]];
+  }
+  return result;
+}
+function arrayNest(target) {
+  return function nest(id = null, link = "parent_id") {
+    const arr = target.filter((_) => Object.prototype.hasOwnProperty.call(_, "id") && Object.prototype.hasOwnProperty.call(_, link));
+    return arr.filter((_) => _[link] == id).map((_) => ({ ..._, children: nest(_.id) }));
+  };
+}
 function wow_array$1(value) {
   if (check.undef(value) || !check.arr(value)) {
     value = cast.arr(value);
@@ -1126,6 +1388,12 @@ function wow_array$1(value) {
       }
       if (key2 === "remove") {
         return batchRemove(target);
+      }
+      if (key2 === "shuffle") {
+        return arrayShuffle(target);
+      }
+      if (key2 === "nest") {
+        return arrayNest(target);
       }
       return Reflect.get(target, key2);
     }
@@ -8290,7 +8558,8 @@ const {
   wx_window_pixel_ratio,
   wx_image_info_sync,
   wx_file_info_sync,
-  wx_router
+  wx_router,
+  ResponseView
 } = weapp;
 const {
   wow_array
@@ -8312,4 +8581,4 @@ const {
   mock_ip,
   mock_created_at
 } = mocker;
-export { d_format, d_format_YMD, d_time, gen_random_integer, gen_uuid, is_NaN, is_arguments, is_array, is_array_like, is_boolean, is_cn_phone_number, is_email, is_error, is_float, is_function, is_integer, is_leap_year, is_length, is_null, is_number, is_object, is_object_like, is_plain_object, is_positive_float, is_positive_integer, is_string, is_symbol, is_undefined, is_url, mock_, mock_address, mock_avatar, mock_city, mock_created_at, mock_district, mock_email, mock_id, mock_image, mock_ip, mock_nick_name, mock_province, mock_title, mock_unique_id, mock_url, to_array, to_boolean, to_cn_cent, to_cn_pinyin, to_float, to_integer, to_null, to_number, to_string, to_symbol, to_undefined, wow_array, wx_clone_deep, wx_dataset, wx_file_info_sync, wx_image_info_sync, wx_promisify, wx_router, wx_window_height, wx_window_pixel_ratio, wx_window_width };
+export { ResponseView, d_format, d_format_YMD, d_time, gen_random_integer, gen_uuid, is_NaN, is_arguments, is_array, is_array_like, is_boolean, is_cn_phone_number, is_email, is_error, is_float, is_function, is_integer, is_leap_year, is_length, is_null, is_number, is_object, is_object_like, is_plain_object, is_positive_float, is_positive_integer, is_string, is_symbol, is_undefined, is_url, mock_, mock_address, mock_avatar, mock_city, mock_created_at, mock_district, mock_email, mock_id, mock_image, mock_ip, mock_nick_name, mock_province, mock_title, mock_unique_id, mock_url, to_array, to_boolean, to_cn_cent, to_cn_pinyin, to_float, to_integer, to_null, to_number, to_string, to_symbol, to_undefined, wow_array, wx_clone_deep, wx_dataset, wx_file_info_sync, wx_image_info_sync, wx_promisify, wx_router, wx_window_height, wx_window_pixel_ratio, wx_window_width };
