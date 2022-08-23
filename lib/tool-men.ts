@@ -91,3 +91,14 @@ export const {
   mock_ip,
   mock_created_at,
 } = mocker
+
+const arr = wow_array([1, 2, 3 ,4, 5])
+
+const comments = wow_array([
+  { id: 1, parent_id: null },
+  { id: 2, parent_id: 1 },
+  { id: 3, parent_id: 1 },
+  { id: 4, parent_id: 2 },
+  { id: 5, parent_id: 4 }
+]);
+console.log('wow_array', arr.shuffle, arr.nest(null, 'parent_id'));

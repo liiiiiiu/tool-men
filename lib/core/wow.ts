@@ -12,6 +12,8 @@ interface WowArrayType {
   min?: any
   max?: any
   remove: any[]
+  shuffle: any[]
+  nest: any
   [prop: string]: any[]
 }
 
@@ -114,6 +116,25 @@ function batchRemove(target: any[]) {
   }
 }
 
+function arrayShuffle([...result]) {
+  let m = result.length
+
+  while (m) {
+    let n = Math.floor(Math.random() * m--);
+
+    [result[m], result[n]] = [result[n], result[m]]
+  }
+
+  return result
+}
+
+function arrayNest(target: any[]) {
+  return function nest(id = null, link = 'parent_id'): any {
+    const arr: any[] = target.filter(_ => Object.prototype.hasOwnProperty.call(_, 'id') && Object.prototype.hasOwnProperty.call(_, link))
+    return arr.filter(_ => _[link] == id).map(_ => ({ ..._, children: nest(_.id) }))
+  }
+}
+
 /**
  * Wow array, better array!
  *
@@ -175,6 +196,14 @@ export function wow_array(value: object): WowArrayType {
 
       if (key === 'remove') {
         return batchRemove(target)
+      }
+
+      if (key === 'shuffle') {
+        return arrayShuffle(target)
+      }
+
+      if (key === 'nest') {
+        return arrayNest(target)
       }
 
       return Reflect.get(target, key)
