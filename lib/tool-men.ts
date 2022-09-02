@@ -71,6 +71,8 @@ export const {
   ResponseView
 } = weapp
 
+export type { ResponseViewType } from './core/wx'
+
 export const {
   wow_array
 } = enhancer

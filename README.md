@@ -226,138 +226,139 @@ wx_router.back(2, () => (res: any) => {console.log(res)})
 
 在发送请求到后端并获得响应数据后，自动处理、控制与 wxml 中的数据绑定；
 
-这里的数据绑定包括 “渲染数据” “是否为空数据” “全部数据是否加载完毕” “分页数” 等。
+这里的数据绑定包括 “渲染数据” “是否为空数据” “全部数据是否加载完毕” “分页数” 等;
+
+并且可以自动处理下拉刷新，触底加载的相关逻辑，完成数据从请求、加载、处理到最终渲染的一整套逻辑。
 
 ```javascript
-import { ResponseView } from 'tool-men'
+import { ResponseView, ResponseViewType } from 'tool-men'
+import { getList, getUser, createUser, updateUser, deleteUser } from '../models/user'
 
-let messageListMockData = [{
-  id: 1,
-  thumbnail: '/assets/hotel-pic-1-1.jpg',
-  name: 'xxx酒店',
-  check_in_at: '2022/07/12',
-  check_out_at: '2022/07/22',
-  created_at: ''
-},{
-  id: 1,
-  thumbnail: '/assets/hotel-pic-1-1.jpg',
-  name: 'xxx酒店',
-  check_in_at: '2022/07/12',
-  check_out_at: '2022/07/22',
-  created_at: ''
-},{
-  id: 1,
-  thumbnail: '/assets/hotel-pic-1-1.jpg',
-  name: 'xxx酒店',
-  check_in_at: '2022/07/12',
-  check_out_at: '2022/07/22',
-  created_at: ''
-},{
-  id: 1,
-  thumbnail: '/assets/hotel-pic-1-1.jpg',
-  name: 'xxx酒店',
-  check_in_at: '2022/07/12',
-  check_out_at: '2022/07/22',
-  created_at: ''
-},{
-  id: 1,
-  thumbnail: '/assets/hotel-pic-1-1.jpg',
-  name: 'xxx酒店',
-  check_in_at: '2022/07/12',
-  check_out_at: '2022/07/22',
-  created_at: ''
-}]
-let userMockData = {
-  name: '小明',
-  age: 13
-}
-
-let responseViewForMessageList: ResponseView
-let responseViewForUser: ResponseView
+let responseViewForList: ResponseViewType
+let responseViewForUser: ResponseViewType
 
 Page({
   data: {
-    messageList: [],
+    list: [],
     user: {}
   },
 
   async onLoad() {
-    // ResponseView 的实例化必须在 Page 函数体内
-
-    responseViewForMessageList = new ResponseView('messageList')
-    await responseViewForMessageList.fetchList((page: number) => {
-      return {
-        data: messageListMockData,
-        total: messageListMockData.length
-      }
-    })
-
+    // ResponseView的实例化必须在 Page 函数体内
+    responseViewForList = new ResponseView('list')
     responseViewForUser = new ResponseView('user')
-    await responseViewForUser.fetch(() => {
-      return {
-        data: userMockData,
-        total: 1
-      }
-    })
 
-    await responseViewForUser.post(() => {
-      return {
-        data: true
-      }
-    }, () => {
-      console.log('after post user')
-    })
+    // 获取列表数据
+    await responseViewForList.fetchList(
+      async (page: number) => await getList({ page })
+    )
 
-    await responseViewForUser.put(() => {
-      return {
-        data: true
-      }
-    }, () => {
-      console.log('after put user')
-    })
-
-    await responseViewForUser.delete(() => {
-      return {
-        data: true
-      }
-    }, () => {
-      console.log('after delete user')
-    })
+    // 获取详情数据
+    await responseViewForUser.fetch(
+      async () => await getUser()
+    )
   },
 
+  // 下拉刷新
   async onPullDownRefresh() {
-    await responseViewForMessageList.fetchList((page: number) => {
-      return {
-        data: messageListMockData,
-        total: messageListMockData.length
-      }
-    })
+    await responseViewForList.fetchList(
+      async (page: number) => await getList({ page })
+    )
 
-    responseViewForMessageList.stopPullDownRefresh
+    await responseViewForUser.fetch(
+      async () => await getUser()
+    )
+
+    responseViewForList.stopPullDownRefresh
   },
 
+  // 触底加载
   async onReachBottom() {
-    responseViewForMessageList.fetchList((page: number) => {
-      return {
-        data: [],
-        total: messageListMockData.length
-      }
-    }, null, null, true)
+    await responseViewForList.fetchList(
+      async (page: number) => await getList({ page }),
+      null,
+      null,
+      true
+    )
+  },
+
+  async createDemo() {
+    // 处理 post 请求
+    await responseViewForUser.post(() => {
+      return await createUser({})
+    }, () => {
+      console.log('create user success')
+    }, () => {
+      console.log('create user fail')
+    })
+  },
+
+  async updateDemo() {
+    // 处理 put 请求
+    await responseViewForUser.put(
+      () => await updateUser({})
+    )
+  },
+
+  async deleteDemo() {
+    // 处理 delete 请求
+    await responseViewForUser.delete(
+      () => await deleteUser({})
+    )
   },
 })
 ```
 
 ```html
+<!-- ResponseView 与 wxml 的交互 -->
 <view class="page-container">
   <view class="page-list-for-my-message">
-    <view wx:if="{{ messageList && messageList.length }}" class="message-list">
-      <view wx:for="{{ messageList }}" wx:key="index" class="message-list-item">
+    <view wx:if="{{ list && list.length }}" class="message-list">
+      <view wx:for="{{ list }}" wx:key="index" class="message-list-item">
         <message-item item="{{ item }}" />
       </view>
     </view>
-    <!-- $messageList 由 ResponseView 生成 -->
-    <van-empty wx:if="{{ $messageList.empty }}" description="敬请期待" />
-    <van-divider wx:if="{{ $messageList.last }}" contentPosition="center">已经到底了</van-divider>
+    <!-- `$messageList` 由 ResponseView 生成 -->
+    <van-empty wx:if="{{ $list.empty }}" description="暂无数据" />
+    <van-divider wx:if="{{ $list.last }}" contentPosition="center">已经到底了</van-divider>
   </view>
 </view>
+```
+
+```javascript
+// model/user
+
+// 获取接口数据后按如下格式返回
+// ResponseView 在拿到 `data` 值后会进行二次处理
+export async funtion getList() {
+  return {
+    data: [/* ... */],
+    total: 2
+  }
+}
+
+export async funtion getUser() {
+  return {
+    data: {/* ... */},
+    total: 1
+  }
+}
+
+export async funtion createUser() {
+  return {
+    data: true,
+  }
+}
+
+export async funtion updateUser() {
+  return {
+    data: true
+  }
+}
+
+export async funtion deleteUser() {
+  return {
+    data: true
+  }
+}
 ```

@@ -761,21 +761,22 @@ var generator = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
 function d_time$1() {
   return +Date.now();
 }
-function d_format$1(value) {
+function d_format$1(value, separator = "-") {
   if (!value) {
     value = d_time$1();
   }
-  let date = new Date(value);
-  let Y = date.getFullYear() + "-";
-  let M = (date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1) + "-";
+  separator = separator.trim();
+  let date = new Date(+new Date(value));
+  let Y = date.getFullYear() + separator;
+  let M = (date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1) + separator;
   let D = (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + " ";
   let h = (date.getHours() < 10 ? "0" + date.getHours() : date.getHours()) + ":";
   let m = (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()) + ":";
   let s = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
   return Y + M + D + h + m + s;
 }
-function d_format_YMD$1(value) {
-  return d_format$1(value).substring(0, 10);
+function d_format_YMD$1(value, separator = "-") {
+  return d_format$1(value, separator).split(" ")[0];
 }
 var datetTransformer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,

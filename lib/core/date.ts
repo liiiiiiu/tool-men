@@ -15,6 +15,7 @@ export function d_time(): number {
  * Get formatted date.
  *
  * @param {string|number|undefined} value Timestamp or date.
+ * @param {string} separator
  *
  * @returns {string} Formatted date.
  *
@@ -23,15 +24,17 @@ export function d_time(): number {
  * d_format() // '2022-07-03 11:33:44'
  * d_format(1656819176086) // '2022-07-03 11:32:56'
  */
-export function d_format(value?: string | number): string {
+export function d_format(value?: string | number, separator: string = '-'): string {
   if (!value) {
     value = d_time()
   }
 
-  let date = new Date(value)
+  separator = separator.trim()
 
-  let Y = date.getFullYear() + '-'
-  let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+  let date = new Date(+new Date(value))
+
+  let Y = date.getFullYear() + separator
+  let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + separator
   let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
   let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
   let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
@@ -44,6 +47,7 @@ export function d_format(value?: string | number): string {
  * Get formatted date.
  *
  * @param {string|number|undefined} value Timestamp or date.
+ * @param {string} separator
  *
  * @returns {string} Formatted date, including only the year, month and day.
  *
@@ -52,6 +56,6 @@ export function d_format(value?: string | number): string {
  * d_format_YMD() // '2022-07-03'
  * d_format_YMD(1656819176086) // '2022-07-03'
  */
-export function d_format_YMD(value?: string | number): string {
-  return d_format(value).substring(0, 10)
+export function d_format_YMD(value?: string | number, separator: string = '-'): string {
+  return d_format(value, separator).split(' ')[0]
 }

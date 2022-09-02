@@ -84,6 +84,56 @@ export declare const wx_router: {
     replace: Function;
     back: Function;
 };
+export interface ResponseViewType {
+    showLoading: Function;
+    hideLoading: Function;
+    showNavigationBarLoading: Function;
+    hideNavigationBarLoading: Function;
+    startPullDownRefresh: Function;
+    stopPullDownRefresh: Function;
+    clear: Boolean;
+    /**
+     * 发起 GET 请求获取列表数据
+     *
+     * @param {Function} sendRequest 发送请求函数，接收 ResponseView 传入的分页
+     * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+     * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+     * @param {boolean} reachBottom 是否正在执行页面上拉触底事件
+     */
+    fetchList: Function;
+    /**
+     * 发起 GET 请求获取数据
+     *
+     * @param {Function} sendRequest 发送请求函数
+     * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+     * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+     */
+    fetch: Function;
+    /**
+     * 发起 POST 请求新增数据
+     *
+     * @param {Function} sendRequest 发送请求函数
+     * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+     * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+     */
+    post: Function;
+    /**
+     * 发起 PUT 请求更新数据
+     *
+     * @param {Function} sendRequest 发送请求函数
+     * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+     * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+     */
+    put: Function;
+    /**
+     * 发起 DELETE 请求删除数据
+     *
+     * @param {Function} sendRequest 发送请求函数
+     * @param {Function|undefined|null} successCallback 请求成功后的回调函数
+     * @param {Function|undefined|null} failCallback 请求失败后的回调函数
+     */
+    delete: Function;
+}
 /**
  * ResponseView 响应视图
  *
@@ -91,7 +141,7 @@ export declare const wx_router: {
  *
  * 这里的数据绑定包括 “渲染数据” “是否为空数据” “全部数据是否加载完毕” “分页数” 等。
  */
-export declare class ResponseView {
+export declare class ResponseView implements ResponseViewType {
     protected page: {
         data: {
             [prop: string]: unknown;
