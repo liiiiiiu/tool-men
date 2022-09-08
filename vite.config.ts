@@ -6,7 +6,7 @@ const path = require('path')
 console.log('__dirname', __dirname)
 export default defineConfig({
   server: {
-    port: 3101
+    port: 3012
   },
 
   // https://cn.vitejs.dev/guide/build.html#library-mode

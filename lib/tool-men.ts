@@ -71,8 +71,6 @@ export const {
   ResponseView
 } = weapp
 
-export type { ResponseViewType } from './core/wx'
-
 export const {
   wow_array
 } = enhancer
@@ -94,3 +92,8 @@ export const {
   mock_ip,
   mock_created_at,
 } = mocker
+
+export type {
+  ResponseViewType,
+  ResponseViewConfigType
+} from './core/wx'

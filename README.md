@@ -49,6 +49,36 @@ let nestArr = wow_array([
   { id: 5, parent_id: 4 }
 ])
 nestArr.nest(null, 'parent_id')
+// [
+//   {
+//     id: 1,
+//     parent_id: null,
+//     children: [
+//       {
+//         id: 2,
+//         parent_id: 1,
+//         children: [
+//           {
+//             id: 4,
+//             parent_id: 2,
+//             children: [
+//               {
+//                 id: 5,
+//                 parent_id: 4,
+//                 children: []
+//               }
+//             ]
+//           }
+//         ]
+//       },
+//       {
+//         id: 3,
+//         parent_id: 1,
+//         children: []
+//       }
+//     ]
+//   }
+// ]
 ```
 
 ### is
@@ -230,8 +260,10 @@ wx_router.back(2, () => (res: any) => {console.log(res)})
 
 并且可以自动处理下拉刷新，触底加载的相关逻辑，完成数据从请求、加载、处理到最终渲染的一整套逻辑。
 
+示例如下：
+
 ```javascript
-import { ResponseView, ResponseViewType } from 'tool-men'
+import { ResponseView, ResponseViewType, ResponseViewConfigType } from 'tool-men'
 import { getList, getUser, createUser, updateUser, deleteUser } from '../models/user'
 
 let responseViewForList: ResponseViewType
@@ -246,7 +278,11 @@ Page({
   async onLoad() {
     // ResponseView的实例化必须在 Page 函数体内
     responseViewForList = new ResponseView('list')
-    responseViewForUser = new ResponseView('user')
+    // 可在实例化时修改配置参数
+    responseViewForUser = new ResponseView('user', {
+      success_toast_title: '提交成功！'
+      // ...
+    } as ResponseViewConfigType)
 
     // 获取列表数据
     await responseViewForList.fetchList(
@@ -351,9 +387,7 @@ export async funtion createUser() {
 }
 
 export async funtion updateUser() {
-  return {
-    data: true
-  }
+  return false
 }
 
 export async funtion deleteUser() {

@@ -1,3 +1,7 @@
+import Check from '../helper/check'
+
+const check = new Check()
+
 /**
  * Get now timestamp.
  *
@@ -30,6 +34,13 @@ export function d_format(value?: string | number, separator: string = '-'): stri
   }
 
   separator = separator.trim()
+
+  // fix ios
+  // new Date('2022-12-12') Null
+  // new Date('2022/12/12') ok
+  if (value && check.str(value)) {
+    value = (value as string).replace(/-/g, '/')
+  }
 
   let date = new Date(+new Date(value))
 

@@ -22,6 +22,6 @@ export declare const wx_clone_deep: typeof weapp.wx_clone_deep, wx_dataset: type
     replace: Function;
     back: Function;
 }, ResponseView: typeof weapp.ResponseView;
-export type { ResponseViewType } from './core/wx';
 export declare const wow_array: typeof enhancer.wow_array;
 export declare const mock_: typeof mocker.mock_, mock_id: typeof mocker.mock_id, mock_unique_id: typeof mocker.mock_unique_id, mock_image: typeof mocker.mock_image, mock_title: typeof mocker.mock_title, mock_avatar: typeof mocker.mock_avatar, mock_nick_name: typeof mocker.mock_nick_name, mock_email: typeof mocker.mock_email, mock_province: typeof mocker.mock_province, mock_city: typeof mocker.mock_city, mock_district: typeof mocker.mock_district, mock_address: typeof mocker.mock_address, mock_url: typeof mocker.mock_url, mock_ip: typeof mocker.mock_ip, mock_created_at: typeof mocker.mock_created_at;
+export type { ResponseViewType, ResponseViewConfigType } from './core/wx';

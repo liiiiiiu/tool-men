@@ -528,6 +528,28 @@ export interface ResponseViewType {
   delete: Function
 }
 
+export interface ResponseViewConfigType {
+  view_key_prefix?: string
+  show_loading?: boolean
+  loading_title?: string
+  loading_mask?: boolean
+  show_success_toast?: boolean
+  success_toast_title?: string
+  show_fail_toast?: boolean
+  fail_toast_title?: string
+}
+
+const responseViewConfig: ResponseViewConfigType = {
+  view_key_prefix: '$',
+  show_loading: true,
+  loading_title: '加载中',
+  loading_mask: true,
+  show_success_toast: true,
+  success_toast_title: '提交成功',
+  show_fail_toast: false,
+  fail_toast_title: '提交失败，请重试'
+}
+
 /**
  * ResponseView 响应视图
  *
@@ -543,15 +565,7 @@ export class ResponseView implements ResponseViewType {
     setData: Function
   }
 
-  protected config: {
-    view_key_prefix?: string
-    loading_title?: string
-    loading_mask?: boolean
-    show_success_toast?: boolean
-    success_toast_title?: string
-    show_fail_toast?: boolean
-    fail_toast_title?: string
-  }
+  protected config: ResponseViewConfigType
 
   // 存储接口返回的数据实体的对象键名
   protected objKey: string
@@ -580,15 +594,7 @@ export class ResponseView implements ResponseViewType {
     total?: number
   }
 
-  constructor(key: string, config = {
-    view_key_prefix: '$',
-    loading_title: '加载中',
-    loading_mask: true,
-    show_success_toast: true,
-    success_toast_title: '提交成功',
-    show_fail_toast: true,
-    fail_toast_title: '提交失败，请重试'
-  }) {
+  constructor(key: string, config?: ResponseViewConfigType) {
     // @ts-ignore
     const pages = getCurrentPages()
     const page = pages[pages.length - 1]
@@ -597,7 +603,7 @@ export class ResponseView implements ResponseViewType {
     }
 
     this.page = page
-    this.config = config
+    this.config = Object.assign(responseViewConfig, config)
     this.objKey = key
     this.objInitialValue = this.page.data[key]
     this.viewKey = this.config.view_key_prefix + key
@@ -706,12 +712,12 @@ export class ResponseView implements ResponseViewType {
 
     !reachBottom ? this.clear : (this.reqPage = this.reqPage + 1)
 
-    this.showLoading
+    this.config.show_loading && this.showLoading
 
     const triggerViewValueWhenRequestSuccess = (res: any) => {
       let total = res?.total || res?.data?.length || 0
       let isEmpty = !total && this.reqPage === 1
-      let isLast = isEmpty || (!res?.data?.length && this.reqPage > 1)
+      let isLast = this.reqPage > 1 && !res?.data?.length
       this.empty = isEmpty
       this.last = isLast
       this.page.setData({
@@ -757,7 +763,7 @@ export class ResponseView implements ResponseViewType {
     } catch (error: any) {
       console.error(`[ResponseView] ${error}`)
 
-      this.hideLoading
+      this.config.show_loading && this.hideLoading
 
       this.reqLoading = false
 
@@ -780,7 +786,7 @@ export class ResponseView implements ResponseViewType {
 
     this.clear
 
-    this.showLoading
+    this.config.show_loading && this.showLoading
 
     const triggerViewValueWhenRequestSuccess = (res: any) => {
       let total = res?.total || (!!res?.data ? 1 : 0) || 0
@@ -831,7 +837,7 @@ export class ResponseView implements ResponseViewType {
     } catch (error: any) {
       console.error(`[ResponseView] ${error}`)
 
-      this.hideLoading
+      this.config.show_loading && this.hideLoading
 
       this.reqLoading = false
 
@@ -845,7 +851,7 @@ export class ResponseView implements ResponseViewType {
     if (this.reqLoading) return
     this.reqLoading = true
 
-    this.showLoading
+    this.config.show_loading && this.showLoading
 
     let res = null
 
@@ -884,7 +890,7 @@ export class ResponseView implements ResponseViewType {
         })
       }
 
-      this.hideLoading
+      this.config.show_loading && this.hideLoading
 
       this.reqLoading = false
 

@@ -134,6 +134,16 @@ export interface ResponseViewType {
      */
     delete: Function;
 }
+export interface ResponseViewConfigType {
+    view_key_prefix?: string;
+    show_loading?: boolean;
+    loading_title?: string;
+    loading_mask?: boolean;
+    show_success_toast?: boolean;
+    success_toast_title?: string;
+    show_fail_toast?: boolean;
+    fail_toast_title?: string;
+}
 /**
  * ResponseView 响应视图
  *
@@ -148,15 +158,7 @@ export declare class ResponseView implements ResponseViewType {
         };
         setData: Function;
     };
-    protected config: {
-        view_key_prefix?: string;
-        loading_title?: string;
-        loading_mask?: boolean;
-        show_success_toast?: boolean;
-        success_toast_title?: string;
-        show_fail_toast?: boolean;
-        fail_toast_title?: string;
-    };
+    protected config: ResponseViewConfigType;
     protected objKey: string;
     protected objInitialValue: unknown;
     protected viewKey: string;
@@ -170,15 +172,7 @@ export declare class ResponseView implements ResponseViewType {
         data: any;
         total?: number;
     };
-    constructor(key: string, config?: {
-        view_key_prefix: string;
-        loading_title: string;
-        loading_mask: boolean;
-        show_success_toast: boolean;
-        success_toast_title: string;
-        show_fail_toast: boolean;
-        fail_toast_title: string;
-    });
+    constructor(key: string, config?: ResponseViewConfigType);
     protected resetObjValue(): any;
     protected resetViewValue(): {
         reqPage: number;

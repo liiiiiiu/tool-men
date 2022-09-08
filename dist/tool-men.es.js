@@ -62,7 +62,7 @@ class Check {
     return tag == "[object Error]" || tag == "[object DOMException]" || typeof value.message === "string" && typeof value.name === "string" && !this.plainObj(value);
   }
 }
-const check$4 = new Check();
+const check$5 = new Check();
 const rint = /^-?\d+$/;
 const rposInt = /^\d+$/;
 const rdecimal = /^\d{1,10}([.]\d{2}){1}$/;
@@ -71,67 +71,67 @@ const rmobilephone = /^1[3456789][0-9]{9}$/;
 const remail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
 const rurl = /^(?=^.{3,255}$)(http(s)?:\/\/)?(www\.)?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+(:\d+)*(\/\w+\.\w+)*([\?&]\w+=\w*)*$/;
 function is_string$1(value) {
-  return check$4.str(value);
+  return check$5.str(value);
 }
 function is_number$1(value) {
-  return check$4.num(value);
+  return check$5.num(value);
 }
 function is_integer$1(value) {
-  return check$4.num(value) && rint.test(value + "");
+  return check$5.num(value) && rint.test(value + "");
 }
 function is_positive_integer$1(value) {
-  return check$4.num(value) && rposInt.test(value + "");
+  return check$5.num(value) && rposInt.test(value + "");
 }
 function is_float$1(value) {
-  return check$4.num(value) && rdecimal.test(value + "");
+  return check$5.num(value) && rdecimal.test(value + "");
 }
 function is_positive_float$1(value) {
-  return check$4.num(value) && rposDecimal.test(value + "");
+  return check$5.num(value) && rposDecimal.test(value + "");
 }
 function is_boolean$1(value) {
-  return check$4.bool(value);
+  return check$5.bool(value);
 }
 function is_array$1(value) {
-  return check$4.arr(value);
+  return check$5.arr(value);
 }
 function is_array_like$1(value) {
-  return check$4.arrLike(value);
+  return check$5.arrLike(value);
 }
 function is_object$1(value) {
-  return check$4.obj(value);
+  return check$5.obj(value);
 }
 function is_plain_object$1(value) {
-  return check$4.plainObj(value);
+  return check$5.plainObj(value);
 }
 function is_object_like$1(value) {
-  return check$4.objLike(value);
+  return check$5.objLike(value);
 }
 function is_symbol$1(value) {
-  return check$4.symbol(value);
+  return check$5.symbol(value);
 }
 function is_function$1(value) {
-  return check$4.fun(value);
+  return check$5.fun(value);
 }
 function is_NaN$1(value) {
-  return check$4.nan(value);
+  return check$5.nan(value);
 }
 function is_undefined$1(value) {
-  return check$4.undef(value);
+  return check$5.undef(value);
 }
 function is_null$1(value) {
-  return check$4.nul(value);
+  return check$5.nul(value);
 }
 function is_length$1(value) {
-  return check$4.len(value);
+  return check$5.len(value);
 }
 function is_arguments$1(value) {
-  return check$4.args(value);
+  return check$5.args(value);
 }
 function is_error$1(value) {
-  return check$4.err(value);
+  return check$5.err(value);
 }
 function is_leap_year$1(value) {
-  if (!check$4.num(value)) {
+  if (!check$5.num(value)) {
     return false;
   }
   return value % 4 === 0 && value % 100 !== 0 || value % 400 === 0;
@@ -140,13 +140,13 @@ function is_cn_phone_number$1(value) {
   return rmobilephone.test(value + "");
 }
 function is_email$1(value) {
-  if (!check$4.str(value)) {
+  if (!check$5.str(value)) {
     return false;
   }
   return remail.test(value + "");
 }
 function is_url$1(value) {
-  if (!check$4.str(value)) {
+  if (!check$5.str(value)) {
     return false;
   }
   return rurl.test(value + "");
@@ -178,7 +178,7 @@ var checker = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePropert
   is_email: is_email$1,
   is_url: is_url$1
 }, Symbol.toStringTag, { value: "Module" }));
-const check$3 = new Check();
+const check$4 = new Check();
 const rbrace = /^(?:\{[\w\W]*\}|\[[\w\W]*\])$/;
 class Cast {
   unwrap(value) {
@@ -205,30 +205,30 @@ class Cast {
     return value;
   }
   str(value) {
-    if (check$3.symbol(value)) {
+    if (check$4.symbol(value)) {
       value = value.description || "";
     }
     return (value + "").toString() + "";
   }
   num(value) {
     let newValue = +this.unwrap(value);
-    return !check$3.nan(newValue) ? newValue : 0;
+    return !check$4.nan(newValue) ? newValue : 0;
   }
   bool(value) {
     return !!value;
   }
   arr(value) {
-    if (check$3.arr(value)) {
+    if (check$4.arr(value)) {
       return value;
     }
-    if (check$3.str(value) && value.indexOf(",") > -1) {
+    if (check$4.str(value) && value.indexOf(",") > -1) {
       return value.split(",");
     }
     return [value];
   }
   symbol(value) {
     let newValue = "";
-    if (!check$3.str(value) || !check$3.num(value)) {
+    if (!check$4.str(value) || !check$4.num(value)) {
       newValue = this.str(value);
     }
     return Symbol(newValue || value + "");
@@ -758,6 +758,7 @@ var generator = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
   gen_uuid: gen_uuid$1,
   gen_random_integer: gen_random_integer$1
 }, Symbol.toStringTag, { value: "Module" }));
+const check$3 = new Check();
 function d_time$1() {
   return +Date.now();
 }
@@ -766,6 +767,9 @@ function d_format$1(value, separator = "-") {
     value = d_time$1();
   }
   separator = separator.trim();
+  if (value && check$3.str(value)) {
+    value = value.replace(/-/g, "/");
+  }
   let date = new Date(+new Date(value));
   let Y = date.getFullYear() + separator;
   let M = (date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1) + separator;
@@ -982,23 +986,25 @@ class WxRouter {
 const wx_router$1 = exception(() => {
   return new WxRouter();
 });
+const responseViewConfig = {
+  view_key_prefix: "$",
+  show_loading: true,
+  loading_title: "\u52A0\u8F7D\u4E2D",
+  loading_mask: true,
+  show_success_toast: true,
+  success_toast_title: "\u63D0\u4EA4\u6210\u529F",
+  show_fail_toast: false,
+  fail_toast_title: "\u63D0\u4EA4\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5"
+};
 class ResponseView$1 {
-  constructor(key2, config = {
-    view_key_prefix: "$",
-    loading_title: "\u52A0\u8F7D\u4E2D",
-    loading_mask: true,
-    show_success_toast: true,
-    success_toast_title: "\u63D0\u4EA4\u6210\u529F",
-    show_fail_toast: true,
-    fail_toast_title: "\u63D0\u4EA4\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5"
-  }) {
+  constructor(key2, config) {
     const pages = getCurrentPages();
     const page = pages[pages.length - 1];
     if (!page || !key2) {
       throw Error(`[ResponseView] ${!page ? "Page" : "Key"} not found!`);
     }
     this.page = page;
-    this.config = config;
+    this.config = Object.assign(responseViewConfig, config);
     this.objKey = key2;
     this.objInitialValue = this.page.data[key2];
     this.viewKey = this.config.view_key_prefix + key2;
@@ -1079,12 +1085,12 @@ class ResponseView$1 {
       return;
     this.reqLoading = true;
     !reachBottom ? this.clear : this.reqPage = this.reqPage + 1;
-    this.showLoading;
+    this.config.show_loading && this.showLoading;
     const triggerViewValueWhenRequestSuccess = (res2) => {
       var _a, _b;
       let total = (res2 == null ? void 0 : res2.total) || ((_a = res2 == null ? void 0 : res2.data) == null ? void 0 : _a.length) || 0;
       let isEmpty = !total && this.reqPage === 1;
-      let isLast = isEmpty || !((_b = res2 == null ? void 0 : res2.data) == null ? void 0 : _b.length) && this.reqPage > 1;
+      let isLast = this.reqPage > 1 && !((_b = res2 == null ? void 0 : res2.data) == null ? void 0 : _b.length);
       this.empty = isEmpty;
       this.last = isLast;
       this.page.setData({
@@ -1122,7 +1128,7 @@ class ResponseView$1 {
       }
     } catch (error) {
       console.error(`[ResponseView] ${error}`);
-      this.hideLoading;
+      this.config.show_loading && this.hideLoading;
       this.reqLoading = false;
       triggerViewValueWhenRequestFail();
       failCallback && failCallback(error);
@@ -1133,7 +1139,7 @@ class ResponseView$1 {
       return;
     this.reqLoading = true;
     this.clear;
-    this.showLoading;
+    this.config.show_loading && this.showLoading;
     const triggerViewValueWhenRequestSuccess = (res2) => {
       let total = (res2 == null ? void 0 : res2.total) || (!!(res2 == null ? void 0 : res2.data) ? 1 : 0) || 0;
       let isEmpty = !total && this.reqPage === 1;
@@ -1175,7 +1181,7 @@ class ResponseView$1 {
       }
     } catch (error) {
       console.error(`[ResponseView] ${error}`);
-      this.hideLoading;
+      this.config.show_loading && this.hideLoading;
       this.reqLoading = false;
       triggerViewValueWhenRequestFail();
       failCallback && failCallback(error);
@@ -1185,7 +1191,7 @@ class ResponseView$1 {
     if (this.reqLoading)
       return;
     this.reqLoading = true;
-    this.showLoading;
+    this.config.show_loading && this.showLoading;
     let res = null;
     try {
       sendRequest && (res = await sendRequest(), this.hideLoading, this.reqLoading = false);
@@ -1214,7 +1220,7 @@ class ResponseView$1 {
           icon: "none"
         });
       }
-      this.hideLoading;
+      this.config.show_loading && this.hideLoading;
       this.reqLoading = false;
       failCallback && failCallback(error);
     }
