@@ -603,7 +603,7 @@ export class ResponseView implements ResponseViewType {
     }
 
     this.page = page
-    this.config = Object.assign(responseViewConfig, config)
+    this.config = Object.assign(JSON.parse(JSON.stringify(responseViewConfig)), config)
     this.objKey = key
     this.objInitialValue = this.page.data[key]
     this.viewKey = this.config.view_key_prefix + key

@@ -1004,7 +1004,7 @@ class ResponseView$1 {
       throw Error(`[ResponseView] ${!page ? "Page" : "Key"} not found!`);
     }
     this.page = page;
-    this.config = Object.assign(responseViewConfig, config);
+    this.config = Object.assign(JSON.parse(JSON.stringify(responseViewConfig)), config);
     this.objKey = key2;
     this.objInitialValue = this.page.data[key2];
     this.viewKey = this.config.view_key_prefix + key2;
