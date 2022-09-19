@@ -2,6 +2,15 @@
 
 Tool Men! 工具“人” ~
 
+为前端业务开发提供的工具函数，适用于 Web 及微信小程序：
+
+1. wow_array，增强版数组，提供切片、批量删除、嵌套等功能；
+2. is函数用于判断数据类型；
+3. to函数用于强制转换数据类型；
+4. mock函数用于在后端提供接口前使用模拟数据进行开发；
+5. wx函数对部分小程序接口进行 Promise 封装，并提供 `wx_router` 路由函数以及 `ResponseView` 视图交互类；
+6. 更多功能查看下方示例。
+
 ## Installing
 
 ```bash
@@ -11,10 +20,10 @@ npm install tool-men --save
 ## Example
 
 ```javascript
-// you can import it when you need
 import { is_string, to_number, wow_array } from 'tool-men'
 
-// or use any name to import all functions
+// or
+
 import * as utils from 'tool-men'
 ```
 
@@ -197,8 +206,8 @@ Get the mock data needed in development quickly.
 ```javascript
 import { wx_router } from 'tool-men'
 
-// Get the Collections of the `routes`.
-// Which includes all pages in your preject.
+// 获取项目中所有的路由
+// 根据 app.json 中注册的页面自动生成
 wx_router.routes
 // {
 //   PagesIndex: "/pages/index/index"
@@ -206,7 +215,7 @@ wx_router.routes
 //   PagesMyIndex: "/pages/my/index/index"
 // }
 
-// Get the Collections of the `route`.
+// 获取当前跳转的路由
 wx_router.route
 // {
 //   from: "pages/index/index"
@@ -214,41 +223,46 @@ wx_router.route
 //   to: "/pages/logs/logs"
 // }
 
-// Call wx.navigateTo or wx.switchTab.
-// Will automatically use `wx.navigateTo` or `wx.switchTab`.
+// 调用 wx.navigateTo 或者 wx.switchTab
+// push 会根据页面性质自动调用 wx.navigateTo、wx.switchTab
 
-// You can use the shorthand of the `path`, and the specific path will be build automatically(not include the last level).
+// 传入的路径可以使用简写的方式（不包含最后一层）
 // `/pages/logs/logs` => `PagesLogs`
-wx_router.push('PagesLogs')
+wx_router.push('PagesLogs', {
+  id: 1
+}, (res) => {
+  console.log('success callback', res)
+}, (err) => {
+  console.log('fail callback', err)
+}, (res) => {
+  console.log('complete callback', res)
+})
 
-// Use the specific path.
+// 也可以写入具体的路径
 wx_router.push('/pages/logs/logs')
 
-// Use the `routes`.
+// 或者使用 routes 对象的属性
 wx_router.push(wx_router.routes.PagesLogs)
 
 
-// Call wx.redirectTo or wx.reLaunch.
+// 调用 wx.redirectTo 或者 wx.reLaunch
 
-// Use `wx.redirectTo`.
-// You can use the shorthand of the `path`, and the specific path will be build automatically(not include the last level).
-// `/pages/logs/logs` => `PagesLogs`
+// 传入的路径参数和 push 函数一样有三种方式
 wx_router.replace('PagesLogs')
 
-// Add `@relaunch` tag to use `wx.reLaunch`.
+// 默认调用 redirectTo，添加 `@relaunch` 标记后使用 wx.reLaunch
 wx_router.replace(`PagesLogs@relaunch`, null, (res: any) => {console.log(res)})
 
-// Use the specific path.
 wx_router.replace('/pages/logs/logs')
 
-// Use the `routes`.
 wx_router.replace(wx_router.routes.PagesLogs)
 
 
-// Exactly like wx.navigateBack.
+// 调用 wx.navigateBack
 
 wx_router.back()
 
+// 指定返回的页面数
 wx_router.back(2, () => (res: any) => {console.log(res)})
 ```
 
